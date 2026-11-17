@@ -45,6 +45,8 @@ Jeder Aufruf braucht den Header `X-API-Key`. Den Key nur serverseitig verwenden,
 | `GET /api/player/{name\|uuid}` | Statistiken eines Spielers |
 | `GET /api/clans` / `GET /api/clans/{name}` | Clan-Liste / Clan mit Mitgliedern |
 
+**Push-Modus (kein offener Port nötig):** Mit `web-api.push.enabled: true` und `push.url` sendet das Plugin die Daten alle 120 s per HTTPS an die Website (z. B. XuroWeb `/api/ingest`). `web-api.enabled` kann dann `false` bleiben.
+
 Beispiel: `curl -H "X-API-Key: DEIN_KEY" http://server:8085/api/top/money?limit=5`
 
 ## JAR über GitHub bekommen

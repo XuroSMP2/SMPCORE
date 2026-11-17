@@ -11,6 +11,11 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -29,7 +34,10 @@ public final class WebApiManager {
 
     private final SMPCore plugin;
     private HttpServer server;
-    private BukkitTask snapshotTask;
+    private BukkitTask snapshotTask, pushTask;
+    private HttpClient http;
+    private String pushUrl = "";
+    private volatile boolean pushWarned;
     private volatile Snapshot snap = Snapshot.EMPTY;
     private byte[] key = new byte[0];
     private String cors = "";
@@ -51,39 +59,91 @@ public final class WebApiManager {
     public void start() {
         stop();
         var cfg = plugin.getConfig();
-        if (!cfg.getBoolean("web-api.enabled", false)) return;
+        boolean serve = cfg.getBoolean("web-api.enabled", false);
+        boolean push = cfg.getBoolean("web-api.push.enabled", false);
+        if (!serve && !push) return;
         String k = cfg.getString("web-api.api-key", "");
         if (k == null || k.length() < 16 || k.equals("CHANGE-ME-TO-A-LONG-RANDOM-KEY")) {
-            plugin.getLogger().warning("web-api: aktiviert, aber 'api-key' fehlt oder ist zu kurz (min. 16 Zeichen). API wird NICHT gestartet.");
+            plugin.getLogger().warning("web-api: 'api-key' fehlt oder ist zu kurz (min. 16 Zeichen). Web-API wird NICHT gestartet.");
             return;
         }
         key = k.getBytes(StandardCharsets.UTF_8);
         cors = cfg.getString("web-api.cors-origin", "");
         rateLimit = Math.max(10, cfg.getInt("web-api.rate-limit-per-minute", 120));
-        String host = cfg.getString("web-api.bind", "0.0.0.0");
-        int port = cfg.getInt("web-api.port", 8085);
-        try {
-            server = HttpServer.create(new InetSocketAddress(host, port), 0);
-            server.createContext("/api/", this::handle);
-            server.setExecutor(Executors.newFixedThreadPool(2, r -> {
-                Thread t = new Thread(r, "SMPCore-WebApi");
-                t.setDaemon(true);
-                return t;
-            }));
-            server.start();
-        } catch (IOException e) {
-            plugin.getLogger().warning("web-api: konnte nicht auf " + host + ":" + port + " starten: " + e.getMessage());
-            server = null;
-            return;
+        if (serve) {
+            String host = cfg.getString("web-api.bind", "0.0.0.0");
+            int port = cfg.getInt("web-api.port", 8085);
+            try {
+                server = HttpServer.create(new InetSocketAddress(host, port), 0);
+                server.createContext("/api/", this::handle);
+                server.setExecutor(Executors.newFixedThreadPool(2, r -> {
+                    Thread t = new Thread(r, "SMPCore-WebApi");
+                    t.setDaemon(true);
+                    return t;
+                }));
+                server.start();
+                plugin.getLogger().info("web-api: läuft auf " + host + ":" + port + " (schreibgeschützt, API-Key aktiv)");
+            } catch (IOException e) {
+                plugin.getLogger().warning("web-api: konnte nicht auf " + host + ":" + port + " starten: " + e.getMessage());
+                server = null;
+            }
         }
         refresh();
         long every = 20L * Math.max(5, cfg.getInt("web-api.refresh-seconds", 30));
         snapshotTask = Bukkit.getScheduler().runTaskTimer(plugin, this::refresh, every, every);
-        plugin.getLogger().info("web-api: läuft auf " + host + ":" + port + " (schreibgeschützt, API-Key aktiv)");
+        if (push) startPush(cfg.getString("web-api.push.url", ""), Math.max(30, cfg.getInt("web-api.push.interval-seconds", 120)));
+    }
+
+    // ---------- Push (Server -> Website), kein offener Port nötig ----------
+
+    private void startPush(String url, int seconds) {
+        if (url == null || !url.startsWith("https://")) {
+            plugin.getLogger().warning("web-api: push.url muss mit https:// beginnen. Push wird NICHT gestartet.");
+            return;
+        }
+        pushUrl = url;
+        http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(8)).build();
+        pushWarned = false;
+        long ticks = 20L * seconds;
+        pushTask = Bukkit.getScheduler().runTaskTimer(plugin, this::push, 40L, ticks);
+        plugin.getLogger().info("web-api: sende Daten alle " + seconds + "s per HTTPS an die Website (push)");
+    }
+
+    private void push() {
+        Snapshot s = snap;
+        if (s.time == 0 || http == null) return;
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("updated", s.time);
+        body.put("status", Map.of("online", s.online, "max", s.max, "totalPlayers", s.totalPlayers, "clans", s.clans.size(), "updated", s.time));
+        body.put("online", s.onlinePlayers);
+        body.put("top", s.top);
+        int cap = Math.max(100, plugin.getConfig().getInt("web-api.push.max-players", 3000));
+        List<Map<String, Object>> players = new ArrayList<>(s.byUuid.values());
+        players.sort((a, b) -> Long.compare((long) b.get("playtimeSeconds"), (long) a.get("playtimeSeconds")));
+        body.put("players", players.subList(0, Math.min(cap, players.size())));
+        body.put("clans", s.clans);
+        String json = Json.write(body);
+        HttpRequest req = HttpRequest.newBuilder(URI.create(pushUrl))
+                .timeout(Duration.ofSeconds(15))
+                .header("Content-Type", "application/json; charset=utf-8")
+                .header("X-API-Key", new String(key, StandardCharsets.UTF_8))
+                .POST(HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8)).build();
+        http.sendAsync(req, HttpResponse.BodyHandlers.discarding()).whenComplete((r, err) -> {
+            String problem = err != null ? err.getClass().getSimpleName() + ": " + err.getMessage()
+                    : (r.statusCode() / 100 != 2 ? "HTTP " + r.statusCode() : null);
+            if (problem != null && !pushWarned) {
+                pushWarned = true; // nur einmal melden, bis es wieder klappt
+                plugin.getLogger().warning("web-api: push fehlgeschlagen (" + problem + "). Prüfe push.url und den api-key.");
+            } else if (problem == null && pushWarned) {
+                pushWarned = false;
+                plugin.getLogger().info("web-api: push funktioniert wieder.");
+            }
+        });
     }
 
     public void stop() {
         if (snapshotTask != null) { snapshotTask.cancel(); snapshotTask = null; }
+        if (pushTask != null) { pushTask.cancel(); pushTask = null; }
         if (server != null) { server.stop(0); server = null; }
     }
 

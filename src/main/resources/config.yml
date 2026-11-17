@@ -334,3 +334,10 @@ web-api:
   rate-limit-per-minute: 120 # pro IP
   cors-origin: ""            # z. B. "https://deine-seite.de" (nur nötig, wenn der Browser direkt zugreift)
   trust-proxy: false         # true = X-Forwarded-For für das Rate-Limit nutzen (nur hinter eigenem Reverse-Proxy!)
+  # Push-Modus (empfohlen, wenn der Hoster keinen Extra-Port erlaubt): Der Server SENDET die Daten per HTTPS an deine Website.
+  # Dafür muss KEIN Port offen sein. 'enabled' (oben) kann dann auf false bleiben. Nutzt denselben api-key.
+  push:
+    enabled: false
+    url: "https://DEINE-SEITE.netlify.app/api/ingest"
+    interval-seconds: 120    # min. 30; Netlify Free: nicht zu klein wählen
+    max-players: 3000        # so viele Spieler (nach Spielzeit) werden für die Spielersuche mitgeschickt
