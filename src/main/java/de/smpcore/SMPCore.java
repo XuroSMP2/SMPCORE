@@ -75,6 +75,7 @@ public final class SMPCore extends JavaPlugin {
     private KeyallManager keyall;
     private SpawnerManager spawners;
     private ToolManager tools;
+    private de.smpcore.web.WebApiManager webApi;
 
     public static SMPCore get() { return instance; }
     public DataManager data() { return data; }
@@ -105,6 +106,7 @@ public final class SMPCore extends JavaPlugin {
     public KeyallManager keyall() { return keyall; }
     public SpawnerManager spawners() { return spawners; }
     public ToolManager tools() { return tools; }
+    public de.smpcore.web.WebApiManager webApi() { return webApi; }
 
     public boolean feature(String name) { return getConfig().getBoolean("features." + name, true); }
 
@@ -230,6 +232,8 @@ public final class SMPCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EnderChestListener(this), this);
         getServer().getPluginManager().registerEvents(new StaffListener(this), this);
 
+        webApi = new de.smpcore.web.WebApiManager(this);
+        webApi.start();
         scoreboards.start();
         crates.startParticles();
         keyall.start();
@@ -253,6 +257,7 @@ public final class SMPCore extends JavaPlugin {
     @Override
     public void onDisable() {
         SignInput.cleanup();
+        if (webApi != null) webApi.stop();
         if (holograms != null) holograms.stop();
         if (scoreboards != null) scoreboards.shutdown();
         if (ranks != null) for (Player p : getServer().getOnlinePlayers()) ranks.remove(p);
@@ -308,6 +313,7 @@ public final class SMPCore extends JavaPlugin {
         holograms.load();
         holograms.start();
         keyall.reset();
+        webApi.start();
     }
 
     private void playtimeTick() {

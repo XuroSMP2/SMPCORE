@@ -33,6 +33,20 @@ Alle Menüs sind normale Kisten-GUIs und mit **einem Tap** bedienbar (kein Shift
 Käufe im AH/Kristall-Shop haben ein Bestätigungsmenü. Spielerdaten laufen über UUIDs, Floodgate-Namen (`.Name`)
 werden mit und ohne Prefix gefunden (`bedrock-prefix` in der config.yml).
 
+## Web-API (für Websites)
+Eingebaute, schreibgeschützte JSON-API. Aktivieren in `config.yml` unter `web-api:` (`enabled: true`, langen `api-key` setzen, Port freigeben), dann `/smpcore reload`.
+Jeder Aufruf braucht den Header `X-API-Key`. Den Key nur serverseitig verwenden, nie im Browser-JavaScript.
+
+| Endpoint | Inhalt |
+|---|---|
+| `GET /api/status` | Online-Zahl, Spieler gesamt, Clans |
+| `GET /api/players/online` | Online-Spieler (ohne Vanish) |
+| `GET /api/top/{money\|crystals\|gems\|kills\|deaths\|playtime}?limit=10` | Bestenlisten |
+| `GET /api/player/{name\|uuid}` | Statistiken eines Spielers |
+| `GET /api/clans` / `GET /api/clans/{name}` | Clan-Liste / Clan mit Mitgliedern |
+
+Beispiel: `curl -H "X-API-Key: DEIN_KEY" http://server:8085/api/top/money?limit=5`
+
 ## JAR über GitHub bekommen
 1. Neues Repo auf GitHub anlegen und diesen Ordnerinhalt hochladen (Push auf `main`).
 2. Tab **Actions** -> der Workflow "Build SMPCore" läuft automatisch.

@@ -316,3 +316,21 @@ resourcepack:
     ping: {glyph: "\uE006", fallback: "<aqua>⚡"}
     keyall: {glyph: "\uE007", fallback: "<aqua>✦"}
     time: {glyph: "\uE008", fallback: "<green>⌚"}
+
+# ===== Web-API (schreibgeschützt, für Websites) =====
+# Endpoints (Header X-API-Key nötig):
+#   GET /api/status | /api/players/online | /api/top/{money|crystals|gems|kills|deaths|playtime}?limit=10
+#   GET /api/player/{name|uuid} | /api/clans | /api/clans/{name}
+# Zum Aktivieren: enabled auf true und api-key auf einen langen Zufallswert (min. 16 Zeichen) setzen, dann /smpcore reload oder Neustart.
+# Den Port (Standard 8085) in der Firewall/beim Hoster freigeben. Besser: über Reverse-Proxy mit HTTPS ausliefern.
+# WICHTIG: Den Key nie im Browser-JavaScript verwenden – Aufrufe immer vom Server deiner Website aus machen.
+web-api:
+  enabled: false
+  api-key: "CHANGE-ME-TO-A-LONG-RANDOM-KEY"
+  bind: "0.0.0.0"            # "127.0.0.1" = nur lokal (z. B. Website läuft auf demselben Server / Reverse-Proxy)
+  port: 8085
+  refresh-seconds: 30        # wie oft die Daten aktualisiert werden
+  max-top: 50                # max. Einträge pro Bestenliste im Cache
+  rate-limit-per-minute: 120 # pro IP
+  cors-origin: ""            # z. B. "https://deine-seite.de" (nur nötig, wenn der Browser direkt zugreift)
+  trust-proxy: false         # true = X-Forwarded-For für das Rate-Limit nutzen (nur hinter eigenem Reverse-Proxy!)
