@@ -150,6 +150,7 @@ public final class AuctionManager {
         double payout = l.price - tax;
         plugin.economy().add(l.seller, payout);
         p.getInventory().addItem(l.item);
+        plugin.market().auction(p, l.seller, l.sellerName, l.item.getType(), l.item.getAmount(), l.price, payout);
         save(true);
         Msg.send(p, "<green>Gekauft: <white>" + l.item.getAmount() + "x " + Items.pretty(l.item.getType())
                 + " <gray>für <green>" + EconomyManager.fmt(l.price));

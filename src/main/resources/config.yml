@@ -338,6 +338,7 @@ web-api:
   # Dafür muss KEIN Port offen sein. 'enabled' (oben) kann dann auf false bleiben. Nutzt denselben api-key.
   push:
     enabled: false
-    url: "https://DEINE-SEITE.netlify.app/api/ingest"
+    url: "https://DEINE-SEITE.netlify.app/api/ingest"   # XuroWeb (leer lassen, wenn nicht genutzt)
+    market-url: ""           # XuroMarket, z. B. "https://DEIN-MARKT.netlify.app/api/ingest" (AH, Orders, Preise, Vermögen, RTP)
     interval-seconds: 120    # min. 30; Netlify Free: nicht zu klein wählen
     max-players: 3000        # so viele Spieler (nach Spielzeit) werden für die Spielersuche mitgeschickt

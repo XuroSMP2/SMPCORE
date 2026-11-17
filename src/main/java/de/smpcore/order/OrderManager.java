@@ -153,6 +153,7 @@ public final class OrderManager {
         plugin.economy().add(p.getUniqueId(), pay);
         o.filled += removed;
         o.stored += removed;
+        plugin.market().orderDelivery(p, o.owner, o.ownerName, o.material, removed, pay);
         save(true);
         Msg.send(p, "Geliefert: <white>" + removed + "x " + Items.pretty(o.material) + " <gray>→ <green>+" + EconomyManager.fmt(pay));
         p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.6f, 1.2f);

@@ -161,6 +161,7 @@ public final class TeleportManager {
             dest.setYaw(p.getLocation().getYaw());
             dest.setPitch(p.getLocation().getPitch());
             rtpCooldown.put(p.getUniqueId(), System.currentTimeMillis());
+            plugin.market().rtp(p, dim);
             String label = dim.equals("nether") ? "Zufälliger Ort (Nether)" : dim.equals("end") ? "Zufälliger Ort (End)" : "Zufälliger Ort";
             teleport(p, dest, label);
         });

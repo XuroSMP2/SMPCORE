@@ -214,6 +214,7 @@ public final class ShopManager {
             return;
         }
         p.getInventory().addItem(new ItemStack(item.material(), can));
+        plugin.market().shopBuy(p, item.material(), can, cost);
         Msg.send(p, "Gekauft: <white>" + can + "x " + Items.pretty(item.material()) + " <gray>für <green>" + EconomyManager.fmt(cost));
         p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.6f, 1.2f);
     }
@@ -238,6 +239,7 @@ public final class ShopManager {
         if (removed <= 0) { Msg.error(p, "Du hast kein " + Items.pretty(m) + " zum Verkaufen."); return; }
         double total = removed * price;
         plugin.economy().add(p.getUniqueId(), total);
+        plugin.market().shopSell(p, m, removed, total);
         plugin.battlePass().addProgress(p, "SELL", null, (long) total);
         Msg.send(p, "Verkauft: <white>" + removed + "x " + Items.pretty(m) + " <gray>für <gold>" + EconomyManager.fmt(total));
         p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.6f, 0.8f);
@@ -248,17 +250,23 @@ public final class ShopManager {
         ItemStack[] cont = p.getInventory().getStorageContents();
         double total = 0;
         int items = 0;
+        Map<Material, double[]> sold = new EnumMap<>(Material.class); // Material -> {Menge, Summe} für die Markt-Statistik
         for (int i = 0; i < cont.length; i++) {
             ItemStack s = cont[i];
             if (s == null || !canSell(s) || isGear(s)) continue;
-            total += priceOf(s) * s.getAmount();
+            double part = priceOf(s) * s.getAmount();
+            total += part;
             items += s.getAmount();
+            double[] sv = sold.computeIfAbsent(s.getType(), k -> new double[2]);
+            sv[0] += s.getAmount();
+            sv[1] += part;
             cont[i] = null;
         }
         if (items == 0) { Msg.error(p, "Du hast nichts Verkaufbares im Inventar. (Ausrüstung und verzauberte Items schützt /sell all – nutze /sell oder /sell hand.)"); return; }
         p.getInventory().setStorageContents(cont);
         total = Math.round(total * 100) / 100.0;
         plugin.economy().add(p.getUniqueId(), total);
+        sold.forEach((mat, v) -> plugin.market().shopSell(p, mat, (int) v[0], v[1]));
         plugin.battlePass().addProgress(p, "SELL", null, (long) total);
         Msg.send(p, "Verkauft: <white>" + items + " Items <gray>für <gold>" + EconomyManager.fmt(total));
         p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.6f, 0.8f);
@@ -272,6 +280,7 @@ public final class ShopManager {
         Material m = hand.getType();
         p.getInventory().setItemInMainHand(null);
         plugin.economy().add(p.getUniqueId(), total);
+        plugin.market().shopSell(p, m, n, total);
         plugin.battlePass().addProgress(p, "SELL", null, (long) total);
         Msg.send(p, "Verkauft: <white>" + n + "x " + Items.pretty(m) + " <gray>für <gold>" + EconomyManager.fmt(total));
         p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.6f, 0.8f);

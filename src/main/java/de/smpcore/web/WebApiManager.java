@@ -37,7 +37,6 @@ public final class WebApiManager {
     private BukkitTask snapshotTask, pushTask;
     private HttpClient http;
     private String pushUrl = "";
-    private volatile boolean pushWarned;
     private volatile Snapshot snap = Snapshot.EMPTY;
     private byte[] key = new byte[0];
     private String cors = "";
@@ -91,52 +90,70 @@ public final class WebApiManager {
         refresh();
         long every = 20L * Math.max(5, cfg.getInt("web-api.refresh-seconds", 30));
         snapshotTask = Bukkit.getScheduler().runTaskTimer(plugin, this::refresh, every, every);
-        if (push) startPush(cfg.getString("web-api.push.url", ""), Math.max(30, cfg.getInt("web-api.push.interval-seconds", 120)));
+        if (push) startPush(cfg.getString("web-api.push.url", ""), cfg.getString("web-api.push.market-url", ""), Math.max(30, cfg.getInt("web-api.push.interval-seconds", 120)));
     }
 
     // ---------- Push (Server -> Website), kein offener Port nötig ----------
 
-    private void startPush(String url, int seconds) {
-        if (url == null || !url.startsWith("https://")) {
-            plugin.getLogger().warning("web-api: push.url muss mit https:// beginnen. Push wird NICHT gestartet.");
+    private final Set<String> warned = ConcurrentHashMap.newKeySet();
+    private String marketUrl = "";
+
+    private static boolean https(String u) { return u != null && u.startsWith("https://"); }
+
+    private void startPush(String url, String market, int seconds) {
+        pushUrl = https(url) ? url : "";
+        marketUrl = https(market) ? market : "";
+        if (pushUrl.isEmpty() && marketUrl.isEmpty()) {
+            plugin.getLogger().warning("web-api: push.url / push.market-url fehlen oder beginnen nicht mit https://. Push wird NICHT gestartet.");
             return;
         }
-        pushUrl = url;
         http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(8)).build();
-        pushWarned = false;
+        warned.clear();
         long ticks = 20L * seconds;
         pushTask = Bukkit.getScheduler().runTaskTimer(plugin, this::push, 40L, ticks);
-        plugin.getLogger().info("web-api: sende Daten alle " + seconds + "s per HTTPS an die Website (push)");
+        plugin.getLogger().info("web-api: sende Daten alle " + seconds + "s per HTTPS (push" + (pushUrl.isEmpty() ? "" : " website") + (marketUrl.isEmpty() ? "" : " market") + ")");
     }
 
     private void push() {
         Snapshot s = snap;
         if (s.time == 0 || http == null) return;
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("updated", s.time);
-        body.put("status", Map.of("online", s.online, "max", s.max, "totalPlayers", s.totalPlayers, "clans", s.clans.size(), "updated", s.time));
-        body.put("online", s.onlinePlayers);
-        body.put("top", s.top);
-        int cap = Math.max(100, plugin.getConfig().getInt("web-api.push.max-players", 3000));
-        List<Map<String, Object>> players = new ArrayList<>(s.byUuid.values());
-        players.sort((a, b) -> Long.compare((long) b.get("playtimeSeconds"), (long) a.get("playtimeSeconds")));
-        body.put("players", players.subList(0, Math.min(cap, players.size())));
-        body.put("clans", s.clans);
-        String json = Json.write(body);
-        HttpRequest req = HttpRequest.newBuilder(URI.create(pushUrl))
-                .timeout(Duration.ofSeconds(15))
+        Map<String, Object> status = Map.of("online", s.online, "max", s.max, "totalPlayers", s.totalPlayers, "clans", s.clans.size(), "updated", s.time);
+        if (!pushUrl.isEmpty()) {
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("updated", s.time);
+            body.put("status", status);
+            body.put("online", s.onlinePlayers);
+            body.put("top", s.top);
+            int cap = Math.max(100, plugin.getConfig().getInt("web-api.push.max-players", 3000));
+            List<Map<String, Object>> players = new ArrayList<>(s.byUuid.values());
+            players.sort((a, b) -> Long.compare((long) b.get("playtimeSeconds"), (long) a.get("playtimeSeconds")));
+            body.put("players", players.subList(0, Math.min(cap, players.size())));
+            body.put("clans", s.clans);
+            post(pushUrl, Json.write(body));
+        }
+        if (!marketUrl.isEmpty()) {
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("updated", System.currentTimeMillis());
+            body.put("status", status);
+            body.put("online", s.onlinePlayers);
+            body.put("market", plugin.market().export());
+            post(marketUrl, Json.write(body));
+        }
+    }
+
+    private void post(String url, String json) {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(url))
+                .timeout(Duration.ofSeconds(20))
                 .header("Content-Type", "application/json; charset=utf-8")
                 .header("X-API-Key", new String(key, StandardCharsets.UTF_8))
                 .POST(HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8)).build();
         http.sendAsync(req, HttpResponse.BodyHandlers.discarding()).whenComplete((r, err) -> {
             String problem = err != null ? err.getClass().getSimpleName() + ": " + err.getMessage()
                     : (r.statusCode() / 100 != 2 ? "HTTP " + r.statusCode() : null);
-            if (problem != null && !pushWarned) {
-                pushWarned = true; // nur einmal melden, bis es wieder klappt
-                plugin.getLogger().warning("web-api: push fehlgeschlagen (" + problem + "). Prüfe push.url und den api-key.");
-            } else if (problem == null && pushWarned) {
-                pushWarned = false;
-                plugin.getLogger().info("web-api: push funktioniert wieder.");
+            if (problem != null && warned.add(url)) { // nur einmal melden, bis es wieder klappt
+                plugin.getLogger().warning("web-api: push an " + url + " fehlgeschlagen (" + problem + "). Prüfe die URL und den api-key.");
+            } else if (problem == null && warned.remove(url)) {
+                plugin.getLogger().info("web-api: push an " + url + " funktioniert wieder.");
             }
         });
     }

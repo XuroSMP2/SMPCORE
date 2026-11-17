@@ -76,6 +76,7 @@ public final class SMPCore extends JavaPlugin {
     private SpawnerManager spawners;
     private ToolManager tools;
     private de.smpcore.web.WebApiManager webApi;
+    private de.smpcore.market.MarketManager market;
 
     public static SMPCore get() { return instance; }
     public DataManager data() { return data; }
@@ -107,6 +108,7 @@ public final class SMPCore extends JavaPlugin {
     public SpawnerManager spawners() { return spawners; }
     public ToolManager tools() { return tools; }
     public de.smpcore.web.WebApiManager webApi() { return webApi; }
+    public de.smpcore.market.MarketManager market() { return market; }
 
     public boolean feature(String name) { return getConfig().getBoolean("features." + name, true); }
 
@@ -138,6 +140,8 @@ public final class SMPCore extends JavaPlugin {
         data = new DataManager(this);
         data.load();
         economy = new EconomyManager(data);
+        market = new de.smpcore.market.MarketManager(this);
+        market.load();
         shop = new ShopManager(this);
         shop.load();
         crystalShop = new CrystalShopManager(this, "crystalshop.yml", false);
@@ -294,6 +298,7 @@ public final class SMPCore extends JavaPlugin {
         battlePass.save(async);
         enderChests.save(async);
         staff.save(async);
+        market.save(async);
     }
 
     public void reloadAll() {
