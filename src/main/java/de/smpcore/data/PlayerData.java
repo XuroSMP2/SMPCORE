@@ -11,6 +11,7 @@ public final class PlayerData {
     public final UUID uuid;
     public String name;
     public double money;
+    public double bank;     // Bankkonto-Guthaben
     public long crystals;   // AFK-Währung
     public long gems;       // Store-Währung
     public int kills, deaths;

@@ -34,7 +34,14 @@ public final class TeleportManager {
         if (t != null) t.cancel();
     }
 
+    private boolean inCombat(Player p) {
+        if (!plugin.feature("combat") || !plugin.combat().isTagged(p) || p.hasPermission("smpcore.combat.bypass")) return false;
+        Msg.error(p, "Im Kampf kannst du dich nicht teleportieren! Noch " + plugin.combat().secondsLeft(p) + "s.");
+        return true;
+    }
+
     public void teleport(Player p, Location dest, String label) {
+        if (inCombat(p)) return;
         int delay = plugin.getConfig().getInt("teleport.delay-seconds", 3);
         cancel(p);
         if (delay <= 0 || p.hasPermission("smpcore.tp.bypass")) {
@@ -126,6 +133,7 @@ public final class TeleportManager {
     public void rtp(Player p) { rtp(p, "overworld"); }
 
     public void rtp(Player p, String dim) {
+        if (inCombat(p)) return;
         long cd = plugin.getConfig().getLong("rtp.cooldown-seconds", 60) * 1000L;
         Long last = rtpCooldown.get(p.getUniqueId());
         if (last != null && System.currentTimeMillis() - last < cd && !p.hasPermission("smpcore.tp.bypass")) {

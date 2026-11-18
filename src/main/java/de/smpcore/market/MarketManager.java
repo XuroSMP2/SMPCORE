@@ -373,6 +373,7 @@ public final class MarketManager {
             e.put("rank", d.rank == null ? "default" : d.rank);
             e.put("clan", c == null ? null : c.name);
             e.put("money", r2(d.money));
+            e.put("bank", r2(d.bank));
             e.put("crystals", d.crystals);
             e.put("gems", d.gems);
             e.put("boughtMoney", s == null ? 0 : r2(s.boughtMoney));

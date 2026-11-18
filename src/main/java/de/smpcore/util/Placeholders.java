@@ -24,6 +24,7 @@ public final class Placeholders {
         return line
                 .replace("%player%", Msg.esc(p.getName()))
                 .replace("%money%", EconomyManager.fmt(d.money))
+                .replace("%bank%", EconomyManager.fmt(d.bank))
                 .replace("%gems%", Num.format(d.gems))
                 .replace("%crystals%", Num.format(d.crystals))
                 .replace("%kills%", String.valueOf(d.kills))

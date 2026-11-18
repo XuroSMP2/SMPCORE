@@ -77,6 +77,8 @@ public final class SMPCore extends JavaPlugin {
     private ToolManager tools;
     private de.smpcore.web.WebApiManager webApi;
     private de.smpcore.market.MarketManager market;
+    private de.smpcore.bank.BankManager bank;
+    private de.smpcore.combat.CombatManager combat;
 
     public static SMPCore get() { return instance; }
     public DataManager data() { return data; }
@@ -109,6 +111,8 @@ public final class SMPCore extends JavaPlugin {
     public ToolManager tools() { return tools; }
     public de.smpcore.web.WebApiManager webApi() { return webApi; }
     public de.smpcore.market.MarketManager market() { return market; }
+    public de.smpcore.bank.BankManager bank() { return bank; }
+    public de.smpcore.combat.CombatManager combat() { return combat; }
 
     public boolean feature(String name) { return getConfig().getBoolean("features." + name, true); }
 
@@ -189,6 +193,8 @@ public final class SMPCore extends JavaPlugin {
         scoreboards = new ScoreboardManager(this);
         teleports = new TeleportManager(this);
 
+        bank = new de.smpcore.bank.BankManager(this);
+        combat = new de.smpcore.combat.CombatManager(this);
         EconomyCommands eco = new EconomyCommands(this);
         for (String n : new String[]{"balance", "pay", "eco", "crystals", "gems", "top"}) reg(n, eco);
         ShopCommands sc = new ShopCommands(this);
@@ -201,6 +207,7 @@ public final class SMPCore extends JavaPlugin {
         reg("rank", new RankCommand(this));
         reg("clan", new ClanCommand(this));
         reg("order", new OrderCommand(this));
+        reg("bank", new de.smpcore.commands.BankCommand(this));
         reg("dimension", new DimensionCommand(this));
         FeatureCommands fc = new FeatureCommands(this);
         for (String n : new String[]{"live", "announce", "farmmode", "hat", "repair", "near", "seen", "rules", "wiki"}) reg(n, fc);
@@ -235,9 +242,12 @@ public final class SMPCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new BattlePassListener(this), this);
         getServer().getPluginManager().registerEvents(new EnderChestListener(this), this);
         getServer().getPluginManager().registerEvents(new StaffListener(this), this);
+        getServer().getPluginManager().registerEvents(combat, this);
 
         webApi = new de.smpcore.web.WebApiManager(this);
         webApi.start();
+        bank.start();
+        combat.start();
         scoreboards.start();
         crates.startParticles();
         keyall.start();

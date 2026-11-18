@@ -25,6 +25,8 @@ prefixes:
   adminpanel: "ADMIN"
   smpcore: "SMP"
   rank: "RANK"
+  bank: "BANK"
+  combat: "PVP"
   spawner: "SPAWN"
   tool: "TOOL"
   spawn: "SPAWN"
@@ -116,6 +118,8 @@ features:
   crates: true
   scoreboard: true
   orders: true
+  bank: true
+  combat: true
 
 economy:
   starting-money: 1000
@@ -316,6 +320,25 @@ resourcepack:
     ping: {glyph: "\uE006", fallback: "<aqua>⚡"}
     keyall: {glyph: "\uE007", fallback: "<aqua>✦"}
     time: {glyph: "\uE008", fallback: "<green>⌚"}
+
+# ===== Bankkonten (/bank) =====
+# Geld auf dem Konto ist sicher vor dem Tod und kann nicht per /pay verschickt werden. Zinsen gibt es für aktive Spieler.
+bank:
+  max-balance: 0              # max. Guthaben pro Konto (0 = unbegrenzt)
+  interest-percent: 1.0       # Zinsen pro Auszahlung in Prozent (0 = keine Zinsen)
+  interest-minutes: 60        # alle X Minuten
+  interest-max: 25000         # max. Zinsen pro Auszahlung und Spieler (0 = kein Limit)
+  interest-min-balance: 100   # erst ab diesem Guthaben gibt es Zinsen
+  interest-active-days: 7     # nur Spieler, die in den letzten X Tagen online waren, bekommen Zinsen
+
+# ===== Combat-Tag =====
+# Wer kämpft, ist X Sekunden im Kampf: Befehle (inkl. Teleports/Menüs) gesperrt, Ausloggen = Tod mit Item-Verlust.
+# Bypass: Permission smpcore.combat.bypass (Team). Creative/Spectator/Vanish werden nicht getaggt.
+combat:
+  duration-seconds: 15
+  kill-on-logout: true
+  disabled-worlds: []
+  allowed-commands: [msg, tell, w, whisper, r, reply, m, t, helpop, report, ignore, discord, rules]
 
 # ===== Web-API (schreibgeschützt, für Websites) =====
 # Endpoints (Header X-API-Key nötig):

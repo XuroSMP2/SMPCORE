@@ -38,6 +38,7 @@ public final class DataManager {
                 if (c == null) continue;
                 PlayerData d = new PlayerData(id, c.getString("name", "?"));
                 d.money = c.getDouble("money");
+                d.bank = c.getDouble("bank");
                 d.crystals = c.getLong("crystals");
                 d.gems = c.getLong("gems");
                 d.kills = c.getInt("kills");
@@ -77,6 +78,7 @@ public final class DataManager {
             String b = "players." + d.uuid + ".";
             y.set(b + "name", d.name);
             y.set(b + "money", d.money);
+            if (d.bank > 0) y.set(b + "bank", d.bank);
             y.set(b + "crystals", d.crystals);
             y.set(b + "gems", d.gems);
             y.set(b + "kills", d.kills);

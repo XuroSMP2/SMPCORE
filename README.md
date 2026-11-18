@@ -12,6 +12,11 @@ All-in-one SMP-Plugin für **Paper 1.21.4+** (Java 21) mit **Bedrock-Support** (
 - **Admin Panel** `/ap`: Spieler (Geld/Kristalle/Keys/TP/Heilen/Kick), Kopfgelder, Crates, Feature-Schalter, Reload
 - **Extras**: Scoreboard, Homes, `/tpa`, `/rtp`, Spawn, `/daily` mit Streak, `/stats`, Bestenlisten
 
+## Neu: Bankkonten, Combat-Tag, Freund- & Famous-Rang
+- **Bankkonto** (`/bank`, Alias `/konto`): Menü zum Ein-/Auszahlen mit einem Tap, `/bank deposit|withdraw <Betrag|all|half>`, `/bank top`. Geld auf dem Konto ist sicher vor dem Tod und kann nicht per `/pay` verschickt werden. Zinsen, Maximum und Limits in `config.yml` unter `bank:`. Platzhalter `%bank%` für das Scoreboard.
+- **Combat-Tag**: 15 s im Kampf nach PvP-Treffern (auch Pfeile). Befehle/Teleports/Menüs sind gesperrt, Ausloggen im Kampf = Tod mit Item-Verlust. Einstellungen unter `combat:`, Ausnahme per Permission `smpcore.combat.bypass`.
+- **Neue Ränge** `freund` und `famous` (zwischen VIP und MEDIA) und neue Verlaufs-Prefixes für alle Ränge in `ranks.yml`. Bestehende `ranks.yml` auf dem Server werden nicht überschrieben: den Inhalt aus dem Repo übernehmen oder die Datei löschen, damit sie neu erzeugt wird.
+
 ## Neu in v3
 - **Zwei Währungen:** **Kristalle = AFK-Währung** (verdient in der AFK-Zone, Shop: `/crystalshop`) und **Gems = Store-Währung** (Shop: `/gemshop`).
   Gems vergibst du per Befehl, z.B. aus Tebex: `gems give <Spieler> <Menge>`.

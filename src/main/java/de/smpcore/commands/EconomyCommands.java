@@ -45,6 +45,7 @@ public final class EconomyCommands implements TabExecutor {
         } else { Msg.error(s, "Nutzung: /balance <Spieler>"); return; }
         Msg.send(s, "<white>" + Msg.esc(d.name) + "<gray>: <green>" + EconomyManager.fmt(d.money)
                 + " <dark_gray>(" + Num.full(d.money) + ")");
+        if (d.bank > 0) Msg.send(s, "<gray>Bank: <gold>" + EconomyManager.fmt(d.bank));
     }
 
     private void pay(CommandSender s, String[] a) {

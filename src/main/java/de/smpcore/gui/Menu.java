@@ -81,6 +81,7 @@ public abstract class Menu implements InventoryHolder {
         if (n.contains("SmpToolsMenu")) return "smptools";
         if (n.contains("WarpMenu")) return "warp";
         if (n.contains("KitMenu")) return "kit";
+        if (n.contains("BankMenu")) return "bank";
         if (n.contains("OrderMenus") || n.contains("OrderCreateMenus")) return "order";
         if (n.contains("AdminMenus")) return "adminpanel";
         return "default";

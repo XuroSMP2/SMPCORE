@@ -80,6 +80,9 @@ commands:
     description: AFK-Zone (Stars verdienen)
   clan:
     description: Clan-System
+  bank:
+    description: Bankkonto (einzahlen, abheben, Zinsen)
+    aliases: [konto, bankkonto]
   order:
     description: Orders (Kaufaufträge)
     aliases: [orders]
