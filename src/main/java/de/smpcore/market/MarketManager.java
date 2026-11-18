@@ -360,8 +360,8 @@ public final class MarketManager {
         // Vermögen + Handel pro Spieler
         List<PlayerData> pd = new ArrayList<>(plugin.data().all());
         double circulation = 0;
-        for (PlayerData d : pd) circulation += d.money;
-        pd.sort((a, b) -> Double.compare(b.money, a.money));
+        for (PlayerData d : pd) circulation += d.money + d.bank; // Bargeld + Bankguthaben
+        pd.sort((a, b) -> Double.compare(b.money + b.bank, a.money + a.bank));
         List<Map<String, Object>> wealth = new ArrayList<>();
         ClanManager cm = plugin.clans();
         for (PlayerData d : pd) {
@@ -374,6 +374,7 @@ public final class MarketManager {
             e.put("clan", c == null ? null : c.name);
             e.put("money", r2(d.money));
             e.put("bank", r2(d.bank));
+            e.put("total", r2(d.money + d.bank));
             e.put("crystals", d.crystals);
             e.put("gems", d.gems);
             e.put("boughtMoney", s == null ? 0 : r2(s.boughtMoney));
