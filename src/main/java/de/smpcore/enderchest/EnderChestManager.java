@@ -77,6 +77,12 @@ public final class EnderChestManager {
 
     public boolean has(UUID id) { return data.containsKey(id); }
 
+    /** Gespeicherter Inhalt (kann null sein, wenn noch keine Daten vorhanden sind). */
+    public ItemStack[] contents(UUID id) {
+        ItemStack[] a = data.get(id);
+        return a == null ? null : a.clone();
+    }
+
     /** Übernimmt die normale Endertruhe einmalig. */
     public void importVanilla(Player p) {
         if (data.containsKey(p.getUniqueId())) return;

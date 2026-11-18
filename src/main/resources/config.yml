@@ -26,6 +26,7 @@ prefixes:
   smpcore: "SMP"
   rank: "RANK"
   bank: "BANK"
+  verify: "LINK"
   combat: "PVP"
   spawner: "SPAWN"
   tool: "TOOL"
@@ -364,4 +365,5 @@ web-api:
     url: "https://DEINE-SEITE.netlify.app/api/ingest"   # XuroWeb (leer lassen, wenn nicht genutzt)
     market-url: ""           # XuroMarket, z. B. "https://DEIN-MARKT.netlify.app/api/ingest" (AH, Orders, Preise, Vermögen, RTP)
     interval-seconds: 120    # min. 30; Netlify Free: nicht zu klein wählen
+    inventory-seconds: 90    # wie oft das Inventar verknüpfter Spieler (/verify) aktualisiert wird (min. 30, nur bei Änderungen)
     max-players: 3000        # so viele Spieler (nach Spielzeit) werden für die Spielersuche mitgeschickt

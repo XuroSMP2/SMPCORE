@@ -79,6 +79,7 @@ public final class SMPCore extends JavaPlugin {
     private de.smpcore.market.MarketManager market;
     private de.smpcore.bank.BankManager bank;
     private de.smpcore.combat.CombatManager combat;
+    private de.smpcore.link.LinkManager link;
 
     public static SMPCore get() { return instance; }
     public DataManager data() { return data; }
@@ -113,6 +114,7 @@ public final class SMPCore extends JavaPlugin {
     public de.smpcore.market.MarketManager market() { return market; }
     public de.smpcore.bank.BankManager bank() { return bank; }
     public de.smpcore.combat.CombatManager combat() { return combat; }
+    public de.smpcore.link.LinkManager link() { return link; }
 
     public boolean feature(String name) { return getConfig().getBoolean("features." + name, true); }
 
@@ -195,6 +197,8 @@ public final class SMPCore extends JavaPlugin {
 
         bank = new de.smpcore.bank.BankManager(this);
         combat = new de.smpcore.combat.CombatManager(this);
+        link = new de.smpcore.link.LinkManager(this);
+        link.load();
         EconomyCommands eco = new EconomyCommands(this);
         for (String n : new String[]{"balance", "pay", "eco", "crystals", "gems", "top"}) reg(n, eco);
         ShopCommands sc = new ShopCommands(this);
@@ -208,6 +212,7 @@ public final class SMPCore extends JavaPlugin {
         reg("clan", new ClanCommand(this));
         reg("order", new OrderCommand(this));
         reg("bank", new de.smpcore.commands.BankCommand(this));
+        reg("verify", new de.smpcore.commands.VerifyCommand(this));
         reg("dimension", new DimensionCommand(this));
         FeatureCommands fc = new FeatureCommands(this);
         for (String n : new String[]{"live", "announce", "farmmode", "hat", "repair", "near", "seen", "rules", "wiki"}) reg(n, fc);
@@ -243,11 +248,13 @@ public final class SMPCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EnderChestListener(this), this);
         getServer().getPluginManager().registerEvents(new StaffListener(this), this);
         getServer().getPluginManager().registerEvents(combat, this);
+        getServer().getPluginManager().registerEvents(link, this);
 
         webApi = new de.smpcore.web.WebApiManager(this);
         webApi.start();
         bank.start();
         combat.start();
+        link.start();
         scoreboards.start();
         crates.startParticles();
         keyall.start();

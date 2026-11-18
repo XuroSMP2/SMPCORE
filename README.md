@@ -17,6 +17,8 @@ All-in-one SMP-Plugin für **Paper 1.21.4+** (Java 21) mit **Bedrock-Support** (
 - **Combat-Tag**: 15 s im Kampf nach PvP-Treffern (auch Pfeile). Befehle/Teleports/Menüs sind gesperrt, Ausloggen im Kampf = Tod mit Item-Verlust. Einstellungen unter `combat:`, Ausnahme per Permission `smpcore.combat.bypass`.
 - **Neue Ränge** `freund` und `famous` (zwischen VIP und MEDIA) und neue Verlaufs-Prefixes für alle Ränge in `ranks.yml`. Bestehende `ranks.yml` auf dem Server werden nicht überschrieben: den Inhalt aus dem Repo übernehmen oder die Datei löschen, damit sie neu erzeugt wird.
 
+- **XuroMarket-Konto** (`/verify <Code>`, `/verify logout`): Verknüpft den Minecraft-Account mit der Website. Danach sieht der Spieler dort privat sein Inventar und seine Endertruhe. Nur verknüpfte Spieler werden übertragen, nur bei Änderungen (`web-api.push.inventory-seconds`). Braucht `web-api.push.market-url`.
+
 ## Neu in v3
 - **Zwei Währungen:** **Kristalle = AFK-Währung** (verdient in der AFK-Zone, Shop: `/crystalshop`) und **Gems = Store-Währung** (Shop: `/gemshop`).
   Gems vergibst du per Befehl, z.B. aus Tebex: `gems give <Spieler> <Menge>`.

@@ -80,6 +80,9 @@ commands:
     description: AFK-Zone (Stars verdienen)
   clan:
     description: Clan-System
+  verify:
+    description: Account mit XuroMarket verknüpfen (/verify <Code>, /verify logout)
+    aliases: [xverify]
   bank:
     description: Bankkonto (einzahlen, abheben, Zinsen)
     aliases: [konto, bankkonto]

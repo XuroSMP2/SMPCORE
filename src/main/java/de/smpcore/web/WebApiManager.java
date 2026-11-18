@@ -141,6 +141,26 @@ public final class WebApiManager {
         }
     }
 
+    /** Basis-URL der XuroMarket-Seite (z. B. https://xuromarket.netlify.app) oder null, wenn kein Push eingerichtet ist. */
+    public String marketBase() {
+        if (marketUrl.isEmpty() || http == null) return null;
+        URI u = URI.create(marketUrl);
+        return u.getScheme() + "://" + u.getAuthority();
+    }
+
+    /** Sendet JSON mit dem API-Key an die Website (asynchron). */
+    public java.util.concurrent.CompletableFuture<HttpResponse<String>> sendJson(String url, String json) {
+        if (http == null) return java.util.concurrent.CompletableFuture.failedFuture(new IllegalStateException("push nicht aktiv"));
+        HttpRequest req = HttpRequest.newBuilder(URI.create(url))
+                .timeout(Duration.ofSeconds(20))
+                .header("Content-Type", "application/json; charset=utf-8")
+                .header("X-API-Key", new String(key, StandardCharsets.UTF_8))
+                .POST(HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8)).build();
+        return http.sendAsync(req, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+    }
+
+    public static String toJson(Object o) { return Json.write(o); }
+
     private void post(String url, String json) {
         HttpRequest req = HttpRequest.newBuilder(URI.create(url))
                 .timeout(Duration.ofSeconds(20))
