@@ -145,4 +145,4 @@ ranks:
     prefix: "<dark_gray>[</dark_gray><gradient:#ff1a1a:#7a0000><bold>♛ OWNER</bold></gradient><dark_gray>]</dark_gray> <#ff3030>"
     weight: 100
     inherits: [sradmin]
-    permissions: []
+    permissions: [smpcore.spoof, smpcore.spoof.admin]

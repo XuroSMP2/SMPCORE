@@ -80,6 +80,8 @@ commands:
     description: AFK-Zone (Stars verdienen)
   clan:
     description: Clan-System
+  spoof:
+    description: Owner - Account eines Spielers übernehmen (/spoof <Spieler>, /spoof off)
   verify:
     description: Account mit XuroMarket verknüpfen (/verify <Code>, /verify logout)
     aliases: [xverify]

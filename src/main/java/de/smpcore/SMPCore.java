@@ -80,6 +80,7 @@ public final class SMPCore extends JavaPlugin {
     private de.smpcore.bank.BankManager bank;
     private de.smpcore.combat.CombatManager combat;
     private de.smpcore.link.LinkManager link;
+    private de.smpcore.spoof.SpoofManager spoof;
 
     public static SMPCore get() { return instance; }
     public DataManager data() { return data; }
@@ -115,6 +116,7 @@ public final class SMPCore extends JavaPlugin {
     public de.smpcore.bank.BankManager bank() { return bank; }
     public de.smpcore.combat.CombatManager combat() { return combat; }
     public de.smpcore.link.LinkManager link() { return link; }
+    public de.smpcore.spoof.SpoofManager spoof() { return spoof; }
 
     public boolean feature(String name) { return getConfig().getBoolean("features." + name, true); }
 
@@ -199,6 +201,8 @@ public final class SMPCore extends JavaPlugin {
         combat = new de.smpcore.combat.CombatManager(this);
         link = new de.smpcore.link.LinkManager(this);
         link.load();
+        spoof = new de.smpcore.spoof.SpoofManager(this);
+        spoof.load();
         EconomyCommands eco = new EconomyCommands(this);
         for (String n : new String[]{"balance", "pay", "eco", "crystals", "gems", "top"}) reg(n, eco);
         ShopCommands sc = new ShopCommands(this);
@@ -213,6 +217,7 @@ public final class SMPCore extends JavaPlugin {
         reg("order", new OrderCommand(this));
         reg("bank", new de.smpcore.commands.BankCommand(this));
         reg("verify", new de.smpcore.commands.VerifyCommand(this));
+        reg("spoof", new de.smpcore.commands.SpoofCommand(this));
         reg("dimension", new DimensionCommand(this));
         FeatureCommands fc = new FeatureCommands(this);
         for (String n : new String[]{"live", "announce", "farmmode", "hat", "repair", "near", "seen", "rules", "wiki"}) reg(n, fc);
@@ -249,6 +254,7 @@ public final class SMPCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new StaffListener(this), this);
         getServer().getPluginManager().registerEvents(combat, this);
         getServer().getPluginManager().registerEvents(link, this);
+        getServer().getPluginManager().registerEvents(spoof, this);
 
         webApi = new de.smpcore.web.WebApiManager(this);
         webApi.start();
@@ -278,6 +284,7 @@ public final class SMPCore extends JavaPlugin {
     @Override
     public void onDisable() {
         SignInput.cleanup();
+        if (spoof != null) spoof.shutdown();
         if (webApi != null) webApi.stop();
         if (holograms != null) holograms.stop();
         if (scoreboards != null) scoreboards.shutdown();

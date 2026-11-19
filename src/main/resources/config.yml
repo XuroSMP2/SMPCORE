@@ -27,6 +27,7 @@ prefixes:
   rank: "RANK"
   bank: "BANK"
   verify: "LINK"
+  spoof: "SPOOF"
   combat: "PVP"
   spawner: "SPAWN"
   tool: "TOOL"
@@ -121,6 +122,7 @@ features:
   orders: true
   bank: true
   combat: true
+  spoof: true
 
 economy:
   starting-money: 1000
@@ -367,3 +369,8 @@ web-api:
     interval-seconds: 120    # min. 30; Netlify Free: nicht zu klein wählen
     inventory-seconds: 90    # wie oft das Inventar verknüpfter Spieler (/verify) aktualisiert wird (min. 30, nur bei Änderungen)
     max-players: 3000        # so viele Spieler (nach Spielzeit) werden für die Spielersuche mitgeschickt
+
+# /spoof - nur für den Owner (Permission smpcore.spoof, im Owner-Rang in ranks.yml enthalten)
+spoof:
+  allowed-players: []                      # optional: nur diese Namen dürfen spoofen, z. B. ["DeinName"]. Leer = jeder mit der Permission
+  protected-ranks: [owner, sradmin, admin] # diese Ränge (und OPs) kann nur smpcore.spoof.admin spoofen

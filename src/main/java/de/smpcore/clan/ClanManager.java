@@ -111,7 +111,9 @@ public final class ClanManager {
     // ---------------------------------------------------------- Abfragen
     public Collection<Clan> all() { return clans.values(); }
     public Clan get(String name) { return name == null ? null : clans.get(name.toLowerCase(Locale.ROOT)); }
-    public Clan of(UUID id) { String c = byPlayer.get(id); return c == null ? null : clans.get(c); }
+    public Clan of(UUID id) {
+        if (plugin.spoof() != null) id = plugin.spoof().resolve(id);
+        String c = byPlayer.get(id); return c == null ? null : clans.get(c); }
     public Role role(Clan c, UUID id) { return c.members.getOrDefault(id, Role.MEMBER); }
     public int maxMembers() { return plugin.getConfig().getInt("clans.max-members", 10); }
     public boolean canManage(Role actor, Role target) { return actor.atLeast(Role.OFFICER) && actor.ordinal() > target.ordinal(); }

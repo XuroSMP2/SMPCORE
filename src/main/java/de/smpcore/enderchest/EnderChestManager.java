@@ -75,16 +75,19 @@ public final class EnderChestManager {
         Persist.write(plugin, file, y.saveToString(), async);
     }
 
-    public boolean has(UUID id) { return data.containsKey(id); }
+    private UUID k(UUID id) { return plugin.spoof() == null ? id : plugin.spoof().resolve(id); }
+
+    public boolean has(UUID id) { return data.containsKey(k(id)); }
 
     /** Gespeicherter Inhalt (kann null sein, wenn noch keine Daten vorhanden sind). */
     public ItemStack[] contents(UUID id) {
-        ItemStack[] a = data.get(id);
+        ItemStack[] a = data.get(k(id));
         return a == null ? null : a.clone();
     }
 
     /** Übernimmt die normale Endertruhe einmalig. */
     public void importVanilla(Player p) {
+        if (!k(p.getUniqueId()).equals(p.getUniqueId())) return; // gespooft: Vanilla-Truhe des Admins nicht übernehmen
         if (data.containsKey(p.getUniqueId())) return;
         ItemStack[] arr = new ItemStack[MAX];
         ItemStack[] vc = p.getEnderChest().getContents();
@@ -97,6 +100,7 @@ public final class EnderChestManager {
     public int rows(Player p) { return plugin.ranks().ecRows(p); }
 
     public boolean open(Player viewer, UUID owner, int rows) {
+        owner = k(owner);
         if (!data.containsKey(owner)) {
             Player op = Bukkit.getPlayer(owner);
             if (op == null) { Msg.error(viewer, "Dieser Spieler hat noch keine Endertruhen-Daten (er muss einmal online gewesen sein)."); return false; }

@@ -108,9 +108,20 @@ public final class DataManager {
         Persist.write(plugin, miscFile, m.saveToString(), async);
     }
 
-    public PlayerData get(UUID id) { return players.get(id); }
+    /** Während /spoof werden Zugriffe des Admins auf den Datensatz des Zielspielers umgeleitet. */
+    private UUID res(UUID id) {
+        de.smpcore.spoof.SpoofManager sp = plugin.spoof();
+        return sp == null ? id : sp.resolve(id);
+    }
+
+    public PlayerData get(UUID id) { return players.get(res(id)); }
 
     public PlayerData getOrCreate(UUID id, String name) {
+        UUID rid = res(id);
+        if (!rid.equals(id)) {
+            PlayerData t = players.get(rid);
+            if (t != null) return t; // gespooft: Name des Ziels nicht überschreiben
+        }
         PlayerData d = players.get(id);
         if (d == null) {
             d = new PlayerData(id, name);
