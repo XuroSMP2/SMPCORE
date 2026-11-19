@@ -53,7 +53,9 @@ public final class EnderChestManager {
                 for (String slot : c.getKeys(false)) {
                     if (!slot.matches("\\d+")) continue;
                     int i = Integer.parseInt(slot);
-                    if (i < MAX) arr[i] = Items.decode(c.getString(slot, ""));
+                    if (i >= MAX) continue;
+                    // Neues Format: Base64-String. Zusätzlich lesbar: Bukkit-ItemStack-Block ("==: org.bukkit.inventory.ItemStack"), z. B. aus Importen.
+                    arr[i] = c.isConfigurationSection(slot) ? c.getItemStack(slot) : Items.decode(c.getString(slot, ""));
                 }
                 data.put(UUID.fromString(k), arr);
             } catch (Exception ex) {
