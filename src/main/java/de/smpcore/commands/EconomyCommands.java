@@ -50,7 +50,8 @@ public final class EconomyCommands implements TabExecutor {
 
     private void pay(CommandSender s, String[] a) {
         if (!(s instanceof Player p)) { Msg.error(s, "Nur für Spieler."); return; }
-        if (a.length < 2) { Msg.error(s, "Nutzung: /pay <Spieler> <Betrag>"); return; }
+        if (a.length < 2) { Msg.error(s, "Nutzung: /pay <Spieler|*> <Betrag>  (* = jeder Spieler online bekommt den Betrag)"); return; }
+        if (a[0].equals("*")) { payAll(p, a[1], false); return; }
         PlayerData t = plugin.data().find(a[0]);
         if (t == null) { Msg.error(s, "Spieler nicht gefunden."); return; }
         if (t.uuid.equals(p.getUniqueId())) { Msg.error(s, "Du kannst dir nicht selbst Geld senden."); return; }
@@ -125,8 +126,37 @@ public final class EconomyCommands implements TabExecutor {
         Msg.send(s, "<white>" + Msg.esc(d.name) + "<gray>: <light_purple>" + EconomyManager.fmtG(d.gems));
     }
 
+    /** /pay * <Betrag>: Jeder andere Spieler, der online ist, bekommt den Betrag (Gesamtkosten = Betrag x Anzahl). */
+    private void payAll(Player p, String amtArg, boolean stars) {
+        double amt;
+        try { amt = Num.parse(amtArg); } catch (NumberFormatException ex) { Msg.error(p, "Ungültiger Betrag."); return; }
+        if (stars) amt = Math.floor(amt);
+        if (amt < 1) { Msg.error(p, stars ? "Mindestens 1 Star pro Spieler." : "Mindestbetrag: $1 pro Spieler."); return; }
+        List<Player> to = new java.util.ArrayList<>();
+        for (Player o : plugin.getServer().getOnlinePlayers()) {
+            if (o.getUniqueId().equals(p.getUniqueId()) || plugin.vanished().contains(o.getUniqueId())) continue;
+            to.add(o);
+        }
+        if (to.isEmpty()) { Msg.error(p, "Es ist sonst niemand online."); return; }
+        double total = amt * to.size();
+        boolean paid = stars ? plugin.economy().takeCrystals(p.getUniqueId(), (long) total) : plugin.economy().take(p.getUniqueId(), total);
+        if (!paid) {
+            Msg.error(p, "Nicht genug " + (stars ? "Stars" : "Geld") + "! " + to.size() + " Spieler x " + (stars ? EconomyManager.fmtC((long) amt) : EconomyManager.fmt(amt))
+                    + " = " + (stars ? EconomyManager.fmtC((long) total) : EconomyManager.fmt(total)));
+            return;
+        }
+        String shown = stars ? "<light_purple>" + EconomyManager.fmtC((long) amt) : "<green>" + EconomyManager.fmt(amt);
+        for (Player o : to) {
+            if (stars) plugin.economy().addCrystals(o.getUniqueId(), (long) amt); else plugin.economy().add(o.getUniqueId(), amt);
+            Msg.send(o, "<white>" + Msg.esc(p.getName()) + " <gray>hat dir " + shown + " <gray>gesendet.");
+        }
+        Msg.send(p, "Du hast <white>" + to.size() + " Spielern <gray>je " + shown + " <gray>gesendet <dark_gray>(Gesamt: <white>"
+                + (stars ? EconomyManager.fmtC((long) total) : EconomyManager.fmt(total)) + "<dark_gray>)");
+    }
+
     private void payCrystals(CommandSender s, String[] a) {
         if (!(s instanceof Player p)) return;
+        if (a[1].equals("*")) { payAll(p, a[2], true); return; }
         PlayerData t = plugin.data().find(a[1]);
         if (t == null || t.uuid.equals(p.getUniqueId())) { Msg.error(s, "Ungültiger Spieler."); return; }
         long amt;
@@ -186,6 +216,7 @@ public final class EconomyCommands implements TabExecutor {
             }
             if (a.length == 2) return Players.names(a[1]);
         }
+        if (a.length == 1 && n.equals("pay")) { List<String> o = new java.util.ArrayList<>(Players.names("")); o.add("*"); return Players.complete(a[0], o); }
         if (a.length == 1) return Players.names(a[0]);
         if (a.length == 2 && n.equals("pay")) return List.of();
         return List.of();

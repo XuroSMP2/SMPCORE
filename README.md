@@ -19,6 +19,7 @@ All-in-one SMP-Plugin für **Paper 1.21.4+** (Java 21) mit **Bedrock-Support** (
 
 - **/manhunt <Spieler> <Preis> <Währung> <Zeit>**: Preisgeld auf einen Spieler (money/stars/gems, z. B. `30m`, `2h`). Stirbt er in der Zeit, zeigt der Chat „Am meisten Damage an <Spieler> Rangliste“ (Top 3) und zahlt aus (`manhunt.payout-split`); sonst Rückerstattung. `/manhunt list`, `/manhunt cancel <Spieler>`.
 - **Bans**: `/ban <Spieler> [Dauer] <Grund>`, `/tempban <Spieler> <Dauer> <Grund>`, `/unban`, `/banlist`, `/lookup <Spieler>` (Infos + Strafen-Verlauf). Mods (`smpcore.cmd.ban`) bannen nur zeitlich bis `ban.mod-max-duration` (7d), dauerhaft nur mit `smpcore.ban.permanent`; Team/gleich- oder höherrangige Spieler sind geschützt.
+- **/pay * <Betrag>** (auch `/crystals pay * <Menge>`): Jeder andere Spieler online bekommt den Betrag (Kosten = Betrag x Anzahl).
 - **/upgrades** (`upgrades.yml`): Spieler kaufen dauerhafte Upgrades (Endertruhen-Reihen, Homes, AH-Angebote) mit Geld, Stars oder Gems. Admin: `/upgrades set <Spieler> <id> <Stufe>`.
 - **Zeitbegrenzte Tools**: `/smptools give <Spieler> <Tool> [Zeit] [Anzahl]` (Zeit z. B. `3d`, `12h`, `perm`). Ohne Zeit gelten `tools.default-duration` (Standard 3 Tage); danach geht das Tool kaputt.
 - **Mehrere/geteilte Bankkonten**: `/bank create <Name>`, `accounts`, `info`, `share|unshare <Konto> <Spieler>`, `deposit|withdraw <Betrag> [Konto]`, `leave`, `delete`.
