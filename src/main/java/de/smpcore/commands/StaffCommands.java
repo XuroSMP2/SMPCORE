@@ -163,6 +163,7 @@ public final class StaffCommands implements TabExecutor {
         }
         String reason = a.length > ri ? String.join(" ", Arrays.copyOfRange(a, ri, a.length)) : "kein Grund angegeben";
         plugin.staff().mute(d.uuid, until);
+        plugin.punish().log(d.uuid, "MUTE", s instanceof Player mp ? mp.getName() : "Konsole", reason, until);
         String dur = until == 0 ? "dauerhaft" : Num.duration(until - System.currentTimeMillis());
         Msg.send(s, "<white>" + Msg.esc(d.name) + " <gray>wurde gemutet (<white>" + dur + "<gray>): " + Msg.esc(reason));
         Player t = Bukkit.getPlayer(d.uuid);

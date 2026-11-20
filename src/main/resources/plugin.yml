@@ -178,6 +178,17 @@ commands:
     description: Spielmodus wechseln (Team)
   freeze:
     description: Spieler einfrieren (Team)
+  ban:
+    description: Spieler bannen (/ban <Spieler> [Dauer] <Grund>)
+  tempban:
+    description: Spieler zeitlich bannen (/tempban <Spieler> <Dauer> <Grund>)
+  unban:
+    description: Spieler entbannen
+  lookup:
+    description: Infos und Strafen-Verlauf eines Spielers
+    aliases: [check]
+  banlist:
+    description: Aktive Bans anzeigen
   mute:
     description: Spieler muten (Team)
   unmute:
@@ -232,6 +243,8 @@ permissions:
       smpcore.cmd.gm: true
       smpcore.cmd.freeze: true
       smpcore.cmd.mute: true
+      smpcore.cmd.ban: true
+      smpcore.cmd.lookup: true
       smpcore.cmd.clearchat: true
       smpcore.cmd.skull: true
       smpcore.cmd.rename: true
@@ -285,6 +298,18 @@ permissions:
   smpcore.cmd.mute:
     description: /mute und /unmute
     default: op
+  smpcore.cmd.ban:
+    description: "/ban, /tempban, /unban, /banlist (Mods nur zeitlich begrenzt)"
+    default: op
+  smpcore.cmd.lookup:
+    description: /lookup
+    default: op
+  smpcore.ban.permanent:
+    description: Dauerhaft und unbegrenzt bannen, fremde Bans aufheben
+    default: op
+  smpcore.ban.bypass:
+    description: Kann nicht gebannt werden
+    default: false
   smpcore.cmd.clearchat:
     description: /clearchat
     default: op

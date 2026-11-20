@@ -116,7 +116,7 @@ ranks:
     homes: 25
     listings: 50
     sign-limit: 20
-    permissions: [smpcore.tp.bypass, smpcore.cmd.vanish, smpcore.cmd.heal, smpcore.cmd.feed, smpcore.cmd.fly, smpcore.kit.staff, smpcore.cmd.announce, smpcore.cmd.mute, smpcore.cmd.freeze, smpcore.cmd.clearchat]
+    permissions: [smpcore.tp.bypass, smpcore.cmd.vanish, smpcore.cmd.heal, smpcore.cmd.feed, smpcore.cmd.fly, smpcore.kit.staff, smpcore.cmd.announce, smpcore.cmd.mute, smpcore.cmd.freeze, smpcore.cmd.clearchat, smpcore.cmd.ban, smpcore.cmd.lookup]
   srmod:
     display: "<gradient:#00c2d6:#0077b6><bold>SRMOD</bold></gradient>"
     prefix: "<dark_gray>[</dark_gray><gradient:#00c2d6:#0077b6><bold>SRMOD</bold></gradient><dark_gray>]</dark_gray> <#2fb8d8>"

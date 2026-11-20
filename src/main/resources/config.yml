@@ -397,3 +397,11 @@ manhunt:
   min-money: 1000
   min-stars: 10
   min-gems: 5
+
+# ===== Bans (/ban, /tempban, /unban, /lookup, /banlist) =====
+# Mods (Permission smpcore.cmd.ban) dürfen nur zeitlich bis mod-max-duration bannen; dauerhaft nur mit smpcore.ban.permanent (Admins).
+ban:
+  mod-max-duration: 7d
+  require-reason: true
+  broadcast: true          # false = Bans nur dem Team anzeigen
+  appeal-text: ""          # z. B. "Entbannung: discord.gg/..." (steht im Kick-Bildschirm)
