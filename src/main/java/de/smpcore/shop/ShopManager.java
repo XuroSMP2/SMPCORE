@@ -52,6 +52,7 @@ public final class ShopManager {
                 double sell = num(m.get("sell"));
                 items.add(new Item(mt, buy, sell));
                 if (sell > 0) sellPrices.merge(mt, sell, Math::max);
+                else sellPrices.putIfAbsent(mt, 0.0); // sell: 0 = bewusst nicht verkaufbar (kein automatischer Preis)
             }
             categories.put(id, new Category(id, c.getString("name", id), icon, c.getInt("slot", -1), c.getBoolean("locked", false), c.getString("action", ""), items));
         }
@@ -92,7 +93,10 @@ public final class ShopManager {
         if (sp != null) p = sp;
         else {
             double tier = tierPrice(n), piece = pieceFactor(n);
-            p = tier > 0 && piece > 0 ? Math.max(1, tier * piece * 0.6) : patternPrice(n);
+            if (n.startsWith("NETHERITE_") && piece > 0) {
+                // Netherite-Ausrüstung = Barren + Diamant-Version (wie beim Craften), nie mehr wert als die Zutaten
+                p = SPECIAL.get("NETHERITE_INGOT") + 180 * piece * 0.6;
+            } else p = tier > 0 && piece > 0 ? Math.max(1, tier * piece * 0.6) : patternPrice(n);
         }
         return Math.round(p * plugin.getConfig().getDouble("sell.multiplier", 1.0) * 100) / 100.0;
     }
@@ -144,9 +148,9 @@ public final class ShopManager {
         }
         if (n.endsWith("_BOAT") || n.endsWith("_RAFT")) return 4;
         if (n.endsWith("_MINECART")) return 30;
-        if (n.endsWith("_LOG") || n.endsWith("_WOOD") || n.endsWith("_STEM") || n.endsWith("_HYPHAE")) return 3;
+        if (n.endsWith("_LOG") || n.endsWith("_WOOD") || n.endsWith("_STEM") || n.endsWith("_HYPHAE")) return 4; // = 4 Bretter
         if (n.endsWith("_PLANKS")) return 1;
-        if (n.endsWith("_BED")) return 12;
+        if (n.endsWith("_BED")) return 8;
         if (n.endsWith("_WOOL")) return 2;
         if (n.endsWith("_GLAZED_TERRACOTTA")) return 4;
         if (n.endsWith("_CONCRETE") || n.endsWith("_CONCRETE_POWDER") || n.endsWith("_TERRACOTTA")) return 2;
@@ -156,11 +160,13 @@ public final class ShopManager {
         if (n.endsWith("_LEAVES")) return 0.5;
         if (n.endsWith("_STAIRS") || n.endsWith("_WALL") || n.endsWith("_FENCE") || n.endsWith("_FENCE_GATE")) return 1;
         if (n.endsWith("_SLAB") || n.endsWith("_BUTTON") || n.endsWith("_PRESSURE_PLATE") || n.endsWith("_CARPET")) return 0.5;
-        if (n.endsWith("_DOOR") || n.endsWith("_TRAPDOOR") || n.endsWith("_SIGN")) return 3;
+        if (n.endsWith("_DOOR") || n.endsWith("_SIGN")) return 2;
+        if (n.endsWith("_TRAPDOOR")) return 3;
         if (n.endsWith("_BRICKS") || n.endsWith("_TILES")) return 3;
-        if (n.contains("COPPER")) return 20;
-        if (n.startsWith("COOKED_") || n.endsWith("_STEW") || n.endsWith("_SOUP") || n.endsWith("_PIE") || n.equals("BREAD") || n.equals("CAKE")) return 10;
-        if (List.of("BEEF", "PORKCHOP", "CHICKEN", "MUTTON", "RABBIT", "COD", "SALMON", "TROPICAL_FISH").contains(n)) return 4;
+        if (n.equals("COPPER_INGOT")) return 6; // = Kupferblock / 9
+        if (n.contains("COPPER")) return 12;
+        if (n.startsWith("COOKED_") || n.endsWith("_STEW") || n.endsWith("_SOUP") || n.endsWith("_PIE") || n.equals("BREAD") || n.equals("CAKE")) return 8;
+        if (List.of("BEEF", "PORKCHOP", "CHICKEN", "MUTTON", "RABBIT", "COD", "SALMON", "TROPICAL_FISH").contains(n)) return 3;
         return plugin.getConfig().getDouble("sell.default-price", 1.0);
     }
 
