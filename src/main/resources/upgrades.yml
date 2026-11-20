@@ -1,0 +1,35 @@
+# /upgrades - Spieler kaufen dauerhafte Verbesserungen (pro Spieler, bleiben beim Rangwechsel).
+# effect:   EC_ROWS  = zusätzliche Reihen der Endertruhe (maximal 6 Reihen insgesamt)
+#           HOMES    = zusätzliche Homes
+#           LISTINGS = zusätzliche AH-Angebote
+# currency: MONEY (Bargeld) | STARS | GEMS
+# per-level = Bonus pro Stufe, costs = Preis je Stufe (letzter Wert gilt für alle weiteren Stufen)
+# Admin: /upgrades set <Spieler> <id> <Stufe>
+upgrades:
+  ec-rows:
+    name: "<dark_purple><bold>Endertruhe erweitern"
+    icon: ENDER_CHEST
+    effect: EC_ROWS
+    currency: MONEY
+    max-level: 3
+    per-level: 1
+    costs: [25000, 75000, 200000]
+    lore: ["<gray>Mehr Platz in deiner Endertruhe."]
+  homes:
+    name: "<green><bold>Mehr Homes"
+    icon: RED_BED
+    effect: HOMES
+    currency: MONEY
+    max-level: 5
+    per-level: 1
+    costs: [10000, 20000, 40000, 80000, 160000]
+    lore: ["<gray>Setze mehr Homes mit /sethome."]
+  listings:
+    name: "<gold><bold>Mehr AH-Angebote"
+    icon: GOLD_INGOT
+    effect: LISTINGS
+    currency: STARS
+    max-level: 5
+    per-level: 2
+    costs: [100, 200, 300, 400, 500]
+    lore: ["<gray>Biete mehr Items gleichzeitig im AH an."]

@@ -28,6 +28,7 @@ prefixes:
   bank: "BANK"
   verify: "LINK"
   spoof: "SPOOF"
+  upgrades: "UP"
   combat: "PVP"
   spawner: "SPAWN"
   tool: "TOOL"
@@ -123,6 +124,7 @@ features:
   bank: true
   combat: true
   spoof: true
+  upgrades: true
 
 economy:
   starting-money: 1000
@@ -172,6 +174,7 @@ teleport:
   delay-seconds: 3
 
 homes:
+  max-shares: 5   # mit wie vielen Spielern ein Home geteilt werden darf (/home share)
   max: 3                    # Standard, Ränge können das in ranks.yml überschreiben
 
 rtp:
@@ -297,6 +300,11 @@ rules:
   - "<gray>6. <white>Keine Werbung, kein Spam."
   - "<gray>Alle Regeln: <white>/wiki"
 
+# ===== Spezial-Tools (/smptools give <Spieler> <Tool> [Zeit]) =====
+# Ohne Zeitangabe gehen die Tools nach dieser Zeit kaputt. Format: 3d, 12h, 1d12h, 30m; 0 = unbegrenzt.
+tools:
+  default-duration: 3d
+
 # ===== Endertruhe =====
 # Reihen je Rang stehen in ranks.yml (ec-rows). Standard für Ränge ohne Angabe:
 enderchest:
@@ -333,6 +341,9 @@ bank:
   interest-max: 25000         # max. Zinsen pro Auszahlung und Spieler (0 = kein Limit)
   interest-min-balance: 100   # erst ab diesem Guthaben gibt es Zinsen
   interest-active-days: 7     # nur Spieler, die in den letzten X Tagen online waren, bekommen Zinsen
+  max-accounts: 3             # zusätzliche (teilbare) Konten pro Spieler: /bank create <Name>
+  account-create-cost: 5000   # Bargeld-Preis für ein zusätzliches Konto (0 = gratis)
+  max-members: 5              # Mitglieder pro geteiltem Konto: /bank share <Konto> <Spieler>
 
 # ===== Combat-Tag =====
 # Wer kämpft, ist X Sekunden im Kampf: Befehle (inkl. Teleports/Menüs) gesperrt, Ausloggen = Tod mit Item-Verlust.

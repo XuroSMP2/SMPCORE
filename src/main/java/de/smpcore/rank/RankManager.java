@@ -129,20 +129,22 @@ public final class RankManager {
         return best;
     }
 
+    private int up(Player p, String effect) { return plugin.upgrades() == null ? 0 : plugin.upgrades().bonus(p.getUniqueId(), effect); }
+
     public int homes(Player p) {
         int v = maxOf(rankOf(p.getUniqueId()), r -> r.homes, new HashSet<>());
-        return v > 0 ? v : plugin.getConfig().getInt("homes.max", 3);
+        return (v > 0 ? v : plugin.getConfig().getInt("homes.max", 3)) + up(p, "HOMES");
     }
 
     public int listings(Player p) {
         int v = maxOf(rankOf(p.getUniqueId()), r -> r.listings, new HashSet<>());
-        return v > 0 ? v : plugin.getConfig().getInt("auction.max-listings", 10);
+        return (v > 0 ? v : plugin.getConfig().getInt("auction.max-listings", 10)) + up(p, "LISTINGS");
     }
 
     /** Reihen der erweiterten Endertruhe (3-6). */
     public int ecRows(Player p) {
         int v = maxOf(rankOf(p.getUniqueId()), r -> r.ecRows, new HashSet<>());
-        return Math.max(1, Math.min(6, v > 0 ? v : plugin.getConfig().getInt("enderchest.default-rows", 3)));
+        return Math.max(1, Math.min(6, (v > 0 ? v : plugin.getConfig().getInt("enderchest.default-rows", 3)) + up(p, "EC_ROWS")));
     }
 
     /** Erlaubte /sign-Nutzungen pro Tag. */

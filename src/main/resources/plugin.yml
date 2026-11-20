@@ -80,6 +80,9 @@ commands:
     description: AFK-Zone (Stars verdienen)
   clan:
     description: Clan-System
+  upgrades:
+    description: Upgrades kaufen (Endertruhe, Homes, AH-Angebote)
+    aliases: [upgrade]
   spoof:
     description: Owner - Account eines Spielers übernehmen (/spoof <Spieler>, /spoof off)
   verify:

@@ -81,6 +81,7 @@ public final class SMPCore extends JavaPlugin {
     private de.smpcore.combat.CombatManager combat;
     private de.smpcore.link.LinkManager link;
     private de.smpcore.spoof.SpoofManager spoof;
+    private de.smpcore.upgrade.UpgradeManager upgrades;
 
     public static SMPCore get() { return instance; }
     public DataManager data() { return data; }
@@ -117,6 +118,7 @@ public final class SMPCore extends JavaPlugin {
     public de.smpcore.combat.CombatManager combat() { return combat; }
     public de.smpcore.link.LinkManager link() { return link; }
     public de.smpcore.spoof.SpoofManager spoof() { return spoof; }
+    public de.smpcore.upgrade.UpgradeManager upgrades() { return upgrades; }
 
     public boolean feature(String name) { return getConfig().getBoolean("features." + name, true); }
 
@@ -124,7 +126,7 @@ public final class SMPCore extends JavaPlugin {
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
-        for (String f : new String[]{"shop.yml", "crates.yml", "crystalshop.yml", "ranks.yml", "spawners.yml", "tools.yml", "gemshop.yml", "kits.yml", "battlepass.yml"}) {
+        for (String f : new String[]{"shop.yml", "crates.yml", "crystalshop.yml", "ranks.yml", "spawners.yml", "tools.yml", "gemshop.yml", "kits.yml", "battlepass.yml", "upgrades.yml"}) {
             if (!new File(getDataFolder(), f).exists()) saveResource(f, false);
         }
         Msg.configure(getConfig());
@@ -193,14 +195,18 @@ public final class SMPCore extends JavaPlugin {
         spawners.loadData();
         tools = new ToolManager(this);
         tools.load();
+        tools.start();
         keyall = new KeyallManager(this);
         scoreboards = new ScoreboardManager(this);
         teleports = new TeleportManager(this);
 
         bank = new de.smpcore.bank.BankManager(this);
+        bank.load();
         combat = new de.smpcore.combat.CombatManager(this);
         link = new de.smpcore.link.LinkManager(this);
         link.load();
+        upgrades = new de.smpcore.upgrade.UpgradeManager(this);
+        upgrades.load();
         spoof = new de.smpcore.spoof.SpoofManager(this);
         spoof.load();
         EconomyCommands eco = new EconomyCommands(this);
@@ -218,6 +224,7 @@ public final class SMPCore extends JavaPlugin {
         reg("bank", new de.smpcore.commands.BankCommand(this));
         reg("verify", new de.smpcore.commands.VerifyCommand(this));
         reg("spoof", new de.smpcore.commands.SpoofCommand(this));
+        reg("upgrades", new de.smpcore.commands.UpgradesCommand(this));
         reg("dimension", new DimensionCommand(this));
         FeatureCommands fc = new FeatureCommands(this);
         for (String n : new String[]{"live", "announce", "farmmode", "hat", "repair", "near", "seen", "rules", "wiki"}) reg(n, fc);
@@ -323,6 +330,7 @@ public final class SMPCore extends JavaPlugin {
         enderChests.save(async);
         staff.save(async);
         market.save(async);
+        bank.save(async);
     }
 
     public void reloadAll() {
@@ -336,6 +344,7 @@ public final class SMPCore extends JavaPlugin {
         ranks.load();
         spawners.loadConfig();
         tools.load();
+        upgrades.load();
         kits.load();
         warps.load();
         battlePass.loadConfig();

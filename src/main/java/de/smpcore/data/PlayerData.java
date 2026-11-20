@@ -3,6 +3,8 @@ package de.smpcore.data;
 import org.bukkit.Location;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -27,6 +29,8 @@ public final class PlayerData {
     public Location lastLocation; // für /back (nicht gespeichert)
     public final Map<String, Integer> keys = new HashMap<>();
     public final Map<String, String> homes = new LinkedHashMap<>();
+    public final Map<String, Set<UUID>> homeShares = new HashMap<>(); // Home-Name -> Spieler, die es nutzen dürfen
+    public final Map<String, Integer> upgrades = new HashMap<>();     // Upgrade-ID -> Stufe
 
     public PlayerData(UUID uuid, String name) {
         this.uuid = uuid;

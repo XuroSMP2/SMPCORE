@@ -1,5 +1,5 @@
 # CRYSTAL STORE (AFK-Währung): /crystalshop - Stars verdient man in der AFK-Zone (/afk).
-# Reihe 2 = Crystal-Ausrüstung, Reihe 3 = 7 Smart Spawner. Festes Layout (4 Reihen): slot = Position im Menü. Slot 31 (rote Scheibe) ist "Schließen".
+# Reihe 2 = Crystal-Ausrüstung, Reihe 3+4 = alle Smart Spawner. Festes Layout: slot = Position im Menü. Das Menü wächst automatisch (4-6 Reihen); die rote Scheibe "Zurück" sitzt mittig in der letzten Reihe, dieser Slot muss frei bleiben.
 # Ohne "slot" bei den Einträgen wird stattdessen eine blätterbare Liste angezeigt.
 # type: KEY (value = Crate-ID) | MONEY (value = Betrag) | ITEM (value = Material) | COMMAND (value = Befehl, %player%)
 items:
@@ -11,11 +11,17 @@ items:
   - {slot: 14, icon: NETHERITE_SWORD, name: "<light_purple>Crystal Schwert", cost: 500, type: COMMAND, value: "tool give %player% crystal_sword 1", amount: 1, lore: ["<gray>Sharpness V, Looting III, Mending"]}
   - {slot: 15, icon: NETHERITE_AXE, name: "<light_purple>Crystal Axt", cost: 450, type: COMMAND, value: "tool give %player% crystal_axe 1", amount: 1, lore: ["<gray>Sharpness V, Efficiency V, Mending"]}
   - {slot: 16, icon: NETHERITE_PICKAXE, name: "<light_purple>Crystal Spitzhacke", cost: 500, type: COMMAND, value: "tool give %player% crystal_pickaxe 1", amount: 1, lore: ["<gray>Efficiency V, Fortune III, Mending"]}
-  # --- Reihe 3: die 7 Smart Spawner (Loot-Tabellen in spawners.yml) ---
+# --- Reihe 3 + 4: alle 13 Smart Spawner (Loot-Tabellen in spawners.yml) ---
   - {slot: 19, icon: SPAWNER, name: "<green>Zombie Spawner", cost: 200, type: COMMAND, value: "spawner give %player% ZOMBIE 1", amount: 1, lore: ["<gray>Smart-Spawner: lagert Loot & XP"]}
-  - {slot: 20, icon: SPAWNER, name: "<white>Skeleton Spawner", cost: 250, type: COMMAND, value: "spawner give %player% SKELETON 1", amount: 1, lore: ["<gray>Smart-Spawner: lagert Loot & XP"]}
+  - {slot: 20, icon: SPAWNER, name: "<white>Skeleton Spawner", cost: 750, type: COMMAND, value: "spawner give %player% SKELETON 1", amount: 1, lore: ["<gray>Smart-Spawner: lagert Loot & XP"]}
   - {slot: 21, icon: SPAWNER, name: "<dark_gray>Spider Spawner", cost: 250, type: COMMAND, value: "spawner give %player% SPIDER 1", amount: 1, lore: ["<gray>Smart-Spawner: lagert Loot & XP"]}
   - {slot: 22, icon: SPAWNER, name: "<dark_green>Creeper Spawner", cost: 300, type: COMMAND, value: "spawner give %player% CREEPER 1", amount: 1, lore: ["<gray>Smart-Spawner: lagert Loot & XP"]}
   - {slot: 23, icon: SPAWNER, name: "<gold>Blaze Spawner", cost: 500, type: COMMAND, value: "spawner give %player% BLAZE 1", amount: 1, lore: ["<gray>Smart-Spawner: lagert Loot & XP"]}
   - {slot: 24, icon: SPAWNER, name: "<dark_purple>Wither-Skeleton Spawner", cost: 800, type: COMMAND, value: "spawner give %player% WITHER_SKELETON 1", amount: 1, lore: ["<gray>Smart-Spawner: lagert Loot & XP"]}
   - {slot: 25, icon: SPAWNER, name: "<yellow><bold>Iron-Golem Spawner", cost: 1000, type: COMMAND, value: "spawner give %player% IRON_GOLEM 1", amount: 1, lore: ["<gray>Smart-Spawner: lagert Loot & XP"]}
+  - {slot: 28, icon: SPAWNER, name: "<red>Zombified-Piglin Spawner", cost: 400, type: COMMAND, value: "spawner give %player% ZOMBIFIED_PIGLIN 1", amount: 1, lore: ["<gray>Smart-Spawner: lagert Loot & XP"]}
+  - {slot: 29, icon: SPAWNER, name: "<dark_aqua>Enderman Spawner", cost: 900, type: COMMAND, value: "spawner give %player% ENDERMAN 1", amount: 1, lore: ["<gray>Smart-Spawner: lagert Loot & XP"]}
+  - {slot: 30, icon: SPAWNER, name: "<green>Slime Spawner", cost: 350, type: COMMAND, value: "spawner give %player% SLIME 1", amount: 1, lore: ["<gray>Smart-Spawner: lagert Loot & XP"]}
+  - {slot: 31, icon: SPAWNER, name: "<gray>Kuh Spawner", cost: 150, type: COMMAND, value: "spawner give %player% COW 1", amount: 1, lore: ["<gray>Smart-Spawner: lagert Loot & XP"]}
+  - {slot: 32, icon: SPAWNER, name: "<light_purple>Schwein Spawner", cost: 150, type: COMMAND, value: "spawner give %player% PIG 1", amount: 1, lore: ["<gray>Smart-Spawner: lagert Loot & XP"]}
+  - {slot: 33, icon: SPAWNER, name: "<white>Huhn Spawner", cost: 150, type: COMMAND, value: "spawner give %player% CHICKEN 1", amount: 1, lore: ["<gray>Smart-Spawner: lagert Loot & XP"]}

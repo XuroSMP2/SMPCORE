@@ -9,6 +9,7 @@ import org.bukkit.block.Container;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -23,10 +24,12 @@ public final class ToolManager {
     private final SMPCore plugin;
     private final Map<String, Tool> tools = new LinkedHashMap<>();
     private final NamespacedKey key;
+    private final NamespacedKey expKey;
 
     public ToolManager(SMPCore plugin) {
         this.plugin = plugin;
         this.key = new NamespacedKey(plugin, "tool_id");
+        this.expKey = new NamespacedKey(plugin, "tool_expires");
     }
 
     public void load() {
@@ -53,13 +56,20 @@ public final class ToolManager {
     public Collection<Tool> all() { return tools.values(); }
     public Tool get(String id) { return id == null ? null : tools.get(id.toLowerCase(Locale.ROOT)); }
 
-    public ItemStack create(Tool t, int amount) {
+    public ItemStack create(Tool t, int amount) { return create(t, amount, 0L); }
+
+    /** expiresAt = Zeitpunkt (ms), ab dem das Tool kaputtgeht; 0 = nie. */
+    public ItemStack create(Tool t, int amount, long expiresAt) {
         ItemStack it = new ItemStack(t.material(), Math.max(1, amount));
         ItemMeta meta = it.getItemMeta();
         meta.displayName(Msg.item(t.name()));
         List<net.kyori.adventure.text.Component> lore = new ArrayList<>();
         for (String l : t.lore()) lore.add(Msg.item(l));
         if (t.size() > 1) lore.add(Msg.item("<gray>Abbaufläche: <white>" + t.size() + "x" + t.size()));
+        if (expiresAt > 0) {
+            lore.add(Msg.item("<red>Läuft ab: <white>" + new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date(expiresAt))));
+            meta.getPersistentDataContainer().set(expKey, PersistentDataType.LONG, expiresAt);
+        }
         meta.lore(lore);
         for (Map.Entry<String, Integer> e : t.enchants().entrySet()) {
             Enchantment en = Registry.ENCHANTMENT.get(NamespacedKey.minecraft(e.getKey().toLowerCase(Locale.ROOT)));
@@ -73,8 +83,67 @@ public final class ToolManager {
 
     public Tool of(ItemStack it) {
         if (it == null || it.getType().isAir() || !it.hasItemMeta()) return null;
+        if (isExpired(it)) return null; // abgelaufene Tools haben keine Spezialfunktion mehr
         String id = it.getItemMeta().getPersistentDataContainer().get(key, PersistentDataType.STRING);
         return id == null ? null : tools.get(id);
+    }
+
+    /** Ablaufzeit des Tools (ms) oder 0, wenn es unbegrenzt ist. */
+    public long expiresAt(ItemStack it) {
+        if (it == null || it.getType().isAir() || !it.hasItemMeta()) return 0L;
+        Long v = it.getItemMeta().getPersistentDataContainer().get(expKey, PersistentDataType.LONG);
+        return v == null ? 0L : v;
+    }
+
+    public boolean isExpired(ItemStack it) {
+        long e = expiresAt(it);
+        return e > 0 && System.currentTimeMillis() >= e;
+    }
+
+    /** Standard-Haltbarkeit neuer Tools per /smptools give (config tools.default-duration, z. B. 3d; 0 = unbegrenzt). */
+    public long defaultDurationMs() {
+        long v = parseDuration(plugin.getConfig().getString("tools.default-duration", "3d"));
+        return Math.max(0, v);
+    }
+
+    /** "3d", "12h", "30m", "1d12h", "90s"; "perm"/"0"/"never" = 0 (unbegrenzt). Ungültig = -1. */
+    public static long parseDuration(String raw) {
+        if (raw == null) return -1;
+        String s = raw.trim().toLowerCase(Locale.ROOT);
+        if (s.equals("perm") || s.equals("permanent") || s.equals("never") || s.equals("off") || s.equals("0")) return 0;
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("(\\d+)([dhms])").matcher(s);
+        long total = 0; int end = 0;
+        while (m.find()) {
+            if (m.start() != end) return -1;
+            long n = Long.parseLong(m.group(1));
+            total += n * switch (m.group(2)) { case "d" -> 86_400_000L; case "h" -> 3_600_000L; case "m" -> 60_000L; default -> 1_000L; };
+            end = m.end();
+        }
+        return end == s.length() && total > 0 ? total : -1;
+    }
+
+    /** 262800000 ms -> "3d 1h" */
+    public static String fmtDuration(long ms) {
+        long m = Math.max(0, ms / 60_000);
+        long d = m / 1440, h = (m % 1440) / 60, mi = m % 60;
+        return d > 0 ? d + "d " + h + "h" : h > 0 ? h + "h " + mi + "m" : mi + "m";
+    }
+
+    /** Prüft regelmäßig die Inventare: abgelaufene Tools gehen kaputt. */
+    public void start() {
+        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                ItemStack[] c = p.getInventory().getContents();
+                for (int i = 0; i < c.length; i++) {
+                    if (!isExpired(c[i])) continue;
+                    String id = c[i].getItemMeta().getPersistentDataContainer().get(key, PersistentDataType.STRING);
+                    Tool t = id == null ? null : tools.get(id);
+                    p.getInventory().setItem(i, null);
+                    p.playSound(p.getLocation(), Sound.ENTITY_ITEM_BREAK, 1f, 1f);
+                    p.sendMessage(Msg.c("<red>Dein Tool <white>" + (t == null ? Msg.esc(String.valueOf(id)) : t.name()) + "<red> ist abgelaufen und kaputtgegangen."));
+                }
+            }
+        }, 200L, 200L);
     }
 
     /** Alle Blöcke der NxN-Fläche senkrecht zur angeklickten Seite. */

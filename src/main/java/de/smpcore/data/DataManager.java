@@ -57,6 +57,14 @@ public final class DataManager {
                 if (kt != null) for (String kid : kt.getKeys(false)) d.kitUsed.put(kid, kt.getLong(kid));
                 ConfigurationSection h = c.getConfigurationSection("homes");
                 if (h != null) for (String n : h.getKeys(false)) d.homes.put(n, h.getString(n, ""));
+                ConfigurationSection hs = c.getConfigurationSection("homeShares");
+                if (hs != null) for (String n : hs.getKeys(false)) {
+                    Set<UUID> set = new LinkedHashSet<>();
+                    for (String u : hs.getStringList(n)) { try { set.add(UUID.fromString(u)); } catch (IllegalArgumentException ignored) { } }
+                    if (!set.isEmpty()) d.homeShares.put(n, set);
+                }
+                ConfigurationSection up = c.getConfigurationSection("upgrades");
+                if (up != null) for (String n : up.getKeys(false)) d.upgrades.put(n, up.getInt(n));
                 players.put(id, d);
                 names.put(d.name.toLowerCase(Locale.ROOT), id);
             }
@@ -94,6 +102,8 @@ public final class DataManager {
             d.keys.forEach((k, v) -> { if (v > 0) y.set(b + "keys." + k, v); });
             d.homes.forEach((k, v) -> y.set(b + "homes." + k, v));
             d.kitUsed.forEach((k, v) -> y.set(b + "kits." + k, v));
+            d.homeShares.forEach((k, v) -> { if (!v.isEmpty()) y.set(b + "homeShares." + k, v.stream().map(UUID::toString).toList()); });
+            d.upgrades.forEach((k, v) -> { if (v > 0) y.set(b + "upgrades." + k, v); });
         }
         Persist.write(plugin, playersFile, y.saveToString(), async);
 

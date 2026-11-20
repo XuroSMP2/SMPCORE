@@ -57,6 +57,9 @@ public final class StaffCommands implements TabExecutor {
                 Bukkit.broadcast(Msg.c("<gray>Der Chat wurde vom Team geleert."));
                 return true;
             }
+            case "smptools" -> {
+                if (a.length > 0 && a[0].equalsIgnoreCase("give")) { giveTool(s, a); return true; }
+            }
             default -> { }
         }
         if (!(s instanceof Player p)) { Msg.error(s, "Nur für Spieler."); return true; }
@@ -166,10 +169,43 @@ public final class StaffCommands implements TabExecutor {
         if (t != null) t.sendMessage(Msg.c("<red>Du wurdest gemutet (" + dur + "). Grund: " + Msg.esc(reason)));
     }
 
+    /** /smptools give <Spieler> <Tool> [Zeit] [Anzahl]  (Zeit z. B. 3d, 12h, 1d12h, perm; Standard: tools.default-duration) */
+    private void giveTool(CommandSender s, String[] a) {
+        if (!can(s, "smptools")) { Msg.error(s, "Keine Rechte."); return; }
+        String usage = "Nutzung: /smptools give <Spieler> <Tool> [Zeit z. B. 3d|12h|perm] [Anzahl]";
+        if (a.length < 3) { Msg.error(s, usage); return; }
+        Player t = Players.online(a[1]);
+        if (t == null) { Msg.error(s, "Spieler muss online sein."); return; }
+        var tool = plugin.tools().get(a[2]);
+        if (tool == null) { Msg.error(s, "Unbekanntes Tool. Verfügbar: " + String.join(", ", plugin.tools().all().stream().map(x -> x.id()).toList())); return; }
+        long ms = plugin.tools().defaultDurationMs();
+        if (a.length > 3) {
+            ms = de.smpcore.tools.ToolManager.parseDuration(a[3]);
+            if (ms < 0) { Msg.error(s, "Ungültige Zeit. Beispiele: 3d, 12h, 1d12h, 30m oder perm. " + usage); return; }
+        }
+        int amount = 1;
+        if (a.length > 4) {
+            try { amount = Math.max(1, Math.min(64, Integer.parseInt(a[4]))); } catch (NumberFormatException ex) { Msg.error(s, "Ungültige Anzahl."); return; }
+        }
+        long exp = ms > 0 ? System.currentTimeMillis() + ms : 0L;
+        for (int i = 0; i < amount; i++) {
+            t.getInventory().addItem(plugin.tools().create(tool, 1, exp)).values().forEach(it -> t.getWorld().dropItemNaturally(t.getLocation(), it));
+        }
+        String dur = ms > 0 ? "läuft in " + de.smpcore.tools.ToolManager.fmtDuration(ms) + " ab" : "unbegrenzt";
+        Msg.ok(s, amount + "x " + tool.id() + " an " + Msg.esc(t.getName()) + " gegeben (" + dur + ").");
+        if (!s.equals(t)) Msg.send(t, "<gray>Du hast <white>" + tool.name() + " <gray>erhalten – " + (ms > 0 ? "<red>" + dur : "<green>unbegrenzt") + "<gray>.");
+    }
+
     @Override
     public List<String> onTabComplete(CommandSender s, Command c, String label, String[] a) {
         String n = c.getName().toLowerCase(Locale.ROOT);
         if (a.length == 1 && List.of("invsee", "ecsee", "freeze", "mute", "unmute", "skull").contains(n)) return Players.names(a[0]);
+        if (n.equals("smptools")) {
+            if (a.length == 1) return Players.complete(a[0], List.of("give"));
+            if (a.length == 2) return Players.names(a[1]);
+            if (a.length == 3) return Players.complete(a[2], plugin.tools().all().stream().map(x -> x.id()).toList());
+            if (a.length == 4) return Players.complete(a[3], List.of("3d", "1d", "7d", "12h", "perm"));
+        }
         if (a.length == 1 && n.equals("gm")) return Players.complete(a[0], List.of("0", "1", "2", "3"));
         if (a.length == 2 && n.equals("gm")) return Players.names(a[1]);
         if (a.length == 1 && n.equals("ptime")) return Players.complete(a[0], List.of("day", "noon", "night", "midnight", "reset"));
