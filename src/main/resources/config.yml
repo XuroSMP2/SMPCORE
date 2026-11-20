@@ -29,6 +29,7 @@ prefixes:
   verify: "LINK"
   spoof: "SPOOF"
   upgrades: "UP"
+  manhunt: "HUNT"
   combat: "PVP"
   spawner: "SPAWN"
   tool: "TOOL"
@@ -125,6 +126,7 @@ features:
   combat: true
   spoof: true
   upgrades: true
+  manhunt: true
 
 economy:
   starting-money: 1000
@@ -385,3 +387,13 @@ web-api:
 spoof:
   allowed-players: []                      # optional: nur diese Namen dürfen spoofen, z. B. ["DeinName"]. Leer = jeder mit der Permission
   protected-ranks: [owner, sradmin, admin] # diese Ränge (und OPs) kann nur smpcore.spoof.admin spoofen
+
+# ===== Manhunt (/manhunt <Spieler> <Preis> <Währung> <Zeit>) =====
+# Der Preis wird beim Start abgezogen. Stirbt das Ziel, zeigt der Chat die Damage-Rangliste (Top 3) und zahlt aus.
+# Läuft die Zeit ab (oder niemand hat Damage gemacht), bekommt der Auftraggeber alles zurück.
+manhunt:
+  payout-split: [50, 30, 20]   # Prozent für Platz 1/2/3, z. B. [100] = alles an Platz 1
+  max-duration: 1d
+  min-money: 1000
+  min-stars: 10
+  min-gems: 5

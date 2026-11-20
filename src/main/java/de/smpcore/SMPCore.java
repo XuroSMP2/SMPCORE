@@ -82,6 +82,7 @@ public final class SMPCore extends JavaPlugin {
     private de.smpcore.link.LinkManager link;
     private de.smpcore.spoof.SpoofManager spoof;
     private de.smpcore.upgrade.UpgradeManager upgrades;
+    private de.smpcore.manhunt.ManhuntManager manhunt;
 
     public static SMPCore get() { return instance; }
     public DataManager data() { return data; }
@@ -119,6 +120,7 @@ public final class SMPCore extends JavaPlugin {
     public de.smpcore.link.LinkManager link() { return link; }
     public de.smpcore.spoof.SpoofManager spoof() { return spoof; }
     public de.smpcore.upgrade.UpgradeManager upgrades() { return upgrades; }
+    public de.smpcore.manhunt.ManhuntManager manhunt() { return manhunt; }
 
     public boolean feature(String name) { return getConfig().getBoolean("features." + name, true); }
 
@@ -205,6 +207,9 @@ public final class SMPCore extends JavaPlugin {
         combat = new de.smpcore.combat.CombatManager(this);
         link = new de.smpcore.link.LinkManager(this);
         link.load();
+        manhunt = new de.smpcore.manhunt.ManhuntManager(this);
+        manhunt.load();
+        manhunt.start();
         upgrades = new de.smpcore.upgrade.UpgradeManager(this);
         upgrades.load();
         spoof = new de.smpcore.spoof.SpoofManager(this);
@@ -225,6 +230,7 @@ public final class SMPCore extends JavaPlugin {
         reg("verify", new de.smpcore.commands.VerifyCommand(this));
         reg("spoof", new de.smpcore.commands.SpoofCommand(this));
         reg("upgrades", new de.smpcore.commands.UpgradesCommand(this));
+        reg("manhunt", new de.smpcore.commands.ManhuntCommand(this));
         reg("dimension", new DimensionCommand(this));
         FeatureCommands fc = new FeatureCommands(this);
         for (String n : new String[]{"live", "announce", "farmmode", "hat", "repair", "near", "seen", "rules", "wiki"}) reg(n, fc);
@@ -262,6 +268,7 @@ public final class SMPCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(combat, this);
         getServer().getPluginManager().registerEvents(link, this);
         getServer().getPluginManager().registerEvents(spoof, this);
+        getServer().getPluginManager().registerEvents(manhunt, this);
 
         webApi = new de.smpcore.web.WebApiManager(this);
         webApi.start();
@@ -331,6 +338,7 @@ public final class SMPCore extends JavaPlugin {
         staff.save(async);
         market.save(async);
         bank.save(async);
+        manhunt.save(async);
     }
 
     public void reloadAll() {

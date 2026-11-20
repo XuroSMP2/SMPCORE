@@ -17,6 +17,7 @@ All-in-one SMP-Plugin für **Paper 1.21.4+** (Java 21) mit **Bedrock-Support** (
 - **Combat-Tag**: 15 s im Kampf nach PvP-Treffern (auch Pfeile). Befehle/Teleports/Menüs sind gesperrt, Ausloggen im Kampf = Tod mit Item-Verlust. Einstellungen unter `combat:`, Ausnahme per Permission `smpcore.combat.bypass`.
 - **Neue Ränge** `freund` und `famous` (zwischen VIP und MEDIA) und neue Verlaufs-Prefixes für alle Ränge in `ranks.yml`. Bestehende `ranks.yml` auf dem Server werden nicht überschrieben: den Inhalt aus dem Repo übernehmen oder die Datei löschen, damit sie neu erzeugt wird.
 
+- **/manhunt <Spieler> <Preis> <Währung> <Zeit>**: Preisgeld auf einen Spieler (money/stars/gems, z. B. `30m`, `2h`). Stirbt er in der Zeit, zeigt der Chat „Am meisten Damage an <Spieler> Rangliste“ (Top 3) und zahlt aus (`manhunt.payout-split`); sonst Rückerstattung. `/manhunt list`, `/manhunt cancel <Spieler>`.
 - **/upgrades** (`upgrades.yml`): Spieler kaufen dauerhafte Upgrades (Endertruhen-Reihen, Homes, AH-Angebote) mit Geld, Stars oder Gems. Admin: `/upgrades set <Spieler> <id> <Stufe>`.
 - **Zeitbegrenzte Tools**: `/smptools give <Spieler> <Tool> [Zeit] [Anzahl]` (Zeit z. B. `3d`, `12h`, `perm`). Ohne Zeit gelten `tools.default-duration` (Standard 3 Tage); danach geht das Tool kaputt.
 - **Mehrere/geteilte Bankkonten**: `/bank create <Name>`, `accounts`, `info`, `share|unshare <Konto> <Spieler>`, `deposit|withdraw <Betrag> [Konto]`, `leave`, `delete`.

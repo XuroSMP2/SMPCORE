@@ -80,6 +80,8 @@ commands:
     description: AFK-Zone (Stars verdienen)
   clan:
     description: Clan-System
+  manhunt:
+    description: Manhunt - Preisgeld auf einen Spieler (/manhunt <Spieler> <Preis> <Währung> <Zeit>)
   upgrades:
     description: Upgrades kaufen (Endertruhe, Homes, AH-Angebote)
     aliases: [upgrade]
