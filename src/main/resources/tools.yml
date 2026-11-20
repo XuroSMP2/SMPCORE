@@ -2,6 +2,7 @@
 # Sneaken = nur 1 Block. Geben: /tool give <Spieler> <id> [Anzahl]
 # model = Custom-Model-Data für das Resource-Pack (resourcepack/XuroSMP-Pack.zip), 0 = Standard-Optik
 # material: Pickaxe/Shovel/Axe/Hoe bestimmt, welche Blöcke abgebaut werden.
+# mode: tree = Holzfäller-Modus (fällt ganze Bäume), sonst NxN-Fläche mit size.
 tools:
   hammer:
     material: NETHERITE_PICKAXE
@@ -27,8 +28,12 @@ tools:
   lumberaxe:
     material: NETHERITE_AXE
     name: "<gold><bold>Holzfäller-Axt"
-    lore: ["<gray>Baut 3x3 Blöcke ab"]
-    size: 3
+    lore: ["<gray>Fällt den ganzen Baum auf einmal"]  # darunter steht automatisch der Sneak-Hinweis
+    mode: tree             # tree = ganzer Baum (Stämme + Blätter), Standard "area" = NxN-Fläche
+    max-blocks: 200        # max. Stämme pro Baum (zusätzlich begrenzt durch die Haltbarkeit)
+    leaves: true           # natürliche Blätter mit abbauen
+    require-leaves: true   # nur echte Bäume fällen (ohne Blätter = normaler Abbau, schützt Holzbauten)
+    size: 1
     enchants: {EFFICIENCY: 5, UNBREAKING: 3, MENDING: 1}
   # --- Crystal-Ausrüstung (Stars Shop, size 1 = normales Item mit Namen und Verzauberungen) ---
   crystal_helmet:

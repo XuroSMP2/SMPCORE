@@ -19,7 +19,10 @@ import java.util.*;
 
 /** Spezial-Tools (Hammer, Excavator ...), die NxN Blöcke auf einmal abbauen. */
 public final class ToolManager {
-    public record Tool(String id, Material material, String name, List<String> lore, int size, Map<String, Integer> enchants, int model) {}
+    public record Tool(String id, Material material, String name, List<String> lore, int size, Map<String, Integer> enchants, int model,
+                       String mode, int maxBlocks, boolean leaves, boolean requireLeaves) {
+        public boolean tree() { return "tree".equals(mode); }
+    }
 
     private final SMPCore plugin;
     private final Map<String, Tool> tools = new LinkedHashMap<>();
@@ -49,7 +52,9 @@ public final class ToolManager {
             ConfigurationSection es = c.getConfigurationSection("enchants");
             if (es != null) for (String k : es.getKeys(false)) ench.put(k, es.getInt(k));
             tools.put(id.toLowerCase(Locale.ROOT), new Tool(id.toLowerCase(Locale.ROOT), m, c.getString("name", id),
-                    c.getStringList("lore"), size, ench, c.getInt("model", 0)));
+                    c.getStringList("lore"), size, ench, c.getInt("model", 0),
+                    c.getString("mode", "area").toLowerCase(Locale.ROOT), Math.max(1, Math.min(500, c.getInt("max-blocks", 200))),
+                    c.getBoolean("leaves", true), c.getBoolean("require-leaves", true)));
         }
     }
 
@@ -65,7 +70,8 @@ public final class ToolManager {
         meta.displayName(Msg.item(t.name()));
         List<net.kyori.adventure.text.Component> lore = new ArrayList<>();
         for (String l : t.lore()) lore.add(Msg.item(l));
-        if (t.size() > 1) lore.add(Msg.item("<gray>Abbaufläche: <white>" + t.size() + "x" + t.size()));
+        if (t.tree()) lore.add(Msg.item("<dark_gray>Sneaken = nur 1 Block"));
+        else if (t.size() > 1) lore.add(Msg.item("<gray>Abbaufläche: <white>" + t.size() + "x" + t.size()));
         if (expiresAt > 0) {
             lore.add(Msg.item("<red>Läuft ab: <white>" + new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date(expiresAt))));
             meta.getPersistentDataContainer().set(expKey, PersistentDataType.LONG, expiresAt);
