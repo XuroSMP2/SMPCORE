@@ -86,6 +86,12 @@ public final class ToolManager {
             NamespacedKey eqKey = NamespacedKey.fromString(t.equipment());
             if (eqKey != null) {
                 var eq = meta.getEquippable();
+                String mn = t.material().name();
+                // Slot ausdrücklich setzen, sonst lässt sich das Teil nicht anziehen
+                if (mn.endsWith("_HELMET")) eq.setSlot(org.bukkit.inventory.EquipmentSlot.HEAD);
+                else if (mn.endsWith("_CHESTPLATE")) eq.setSlot(org.bukkit.inventory.EquipmentSlot.CHEST);
+                else if (mn.endsWith("_LEGGINGS")) eq.setSlot(org.bukkit.inventory.EquipmentSlot.LEGS);
+                else if (mn.endsWith("_BOOTS")) eq.setSlot(org.bukkit.inventory.EquipmentSlot.FEET);
                 eq.setModel(eqKey);
                 meta.setEquippable(eq);
             }
