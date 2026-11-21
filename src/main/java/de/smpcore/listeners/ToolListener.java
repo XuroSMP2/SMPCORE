@@ -15,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -64,6 +65,14 @@ public final class ToolListener implements Listener {
             processing.remove(p.getUniqueId());
         }
         if (extra > 0) damage(p, hand, extra);
+    }
+
+    /** Crystal-Eimer (mode: infinite): wird beim Platzieren von Wasser/Lava nie leer. */
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onBucketEmpty(PlayerBucketEmptyEvent e) {
+        ItemStack used = e.getPlayer().getInventory().getItem(e.getHand());
+        ToolManager.Tool t = plugin.tools().of(used);
+        if (t != null && t.infinite()) e.setItemStack(used.clone()); // Eimer bleibt gefüllt (inkl. Ablaufzeit/Name)
     }
 
     /** Holzfäller-Axt: fällt den ganzen Baum (zusammenhängende Stämme + optional natürliche Blätter). */

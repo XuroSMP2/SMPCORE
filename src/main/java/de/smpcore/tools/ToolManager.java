@@ -22,6 +22,7 @@ public final class ToolManager {
     public record Tool(String id, Material material, String name, List<String> lore, int size, Map<String, Integer> enchants, int model,
                        String mode, int maxBlocks, boolean leaves, boolean requireLeaves, String equipment) {
         public boolean tree() { return "tree".equals(mode); }
+        public boolean infinite() { return "infinite".equals(mode); }
     }
 
     private final SMPCore plugin;
@@ -71,6 +72,7 @@ public final class ToolManager {
         List<net.kyori.adventure.text.Component> lore = new ArrayList<>();
         for (String l : t.lore()) lore.add(Msg.item(l));
         if (t.tree()) lore.add(Msg.item("<dark_gray>Sneaken = nur 1 Block"));
+        else if (t.infinite()) lore.add(Msg.item("<dark_gray>Unendlich - wird nie leer"));
         else if (t.size() > 1) lore.add(Msg.item("<gray>Abbaufläche: <white>" + t.size() + "x" + t.size()));
         if (expiresAt > 0) {
             lore.add(Msg.item("<red>Läuft ab: <white>" + new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date(expiresAt))));

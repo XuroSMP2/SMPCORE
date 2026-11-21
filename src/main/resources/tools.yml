@@ -90,3 +90,20 @@ tools:
     size: 1
     model: 1
     enchants: {EFFICIENCY: 5, FORTUNE: 3, UNBREAKING: 3, MENDING: 1}
+  # --- Crystal-Eimer: unendlich, werden beim Platzieren nie leer (mode: infinite) ---
+  crystal_lavabucket:
+    material: LAVA_BUCKET
+    name: "<red><bold>Crystal Lava Bucket"
+    lore: ["<gray>Unendliche Lava"]
+    mode: infinite
+    size: 1
+    model: 12
+    enchants: {}
+  crystal_waterbucket:
+    material: WATER_BUCKET
+    name: "<aqua><bold>Crystal Water Bucket"
+    lore: ["<gray>Unendliches Wasser"]
+    mode: infinite
+    size: 1
+    model: 13
+    enchants: {}

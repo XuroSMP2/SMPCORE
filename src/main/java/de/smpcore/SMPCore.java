@@ -276,6 +276,7 @@ public final class SMPCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(spoof, this);
         getServer().getPluginManager().registerEvents(manhunt, this);
         getServer().getPluginManager().registerEvents(punish, this);
+        getServer().getPluginManager().registerEvents(new de.smpcore.afk.AfkBlockListener(this), this);
 
         webApi = new de.smpcore.web.WebApiManager(this);
         webApi.start();

@@ -34,7 +34,7 @@ public final class UpgradeManager {
             Material icon = Material.matchMaterial(c.getString("icon", "NETHER_STAR"));
             String effect = c.getString("effect", "").toUpperCase(Locale.ROOT);
             String cur = c.getString("currency", "MONEY").toUpperCase(Locale.ROOT);
-            if (!List.of("EC_ROWS", "HOMES", "LISTINGS").contains(effect)) { plugin.getLogger().warning("Upgrade " + id + ": unbekannter effect '" + effect + "'"); continue; }
+            if (!List.of("EC_ROWS", "HOMES", "LISTINGS", "AFK_BLOCK").contains(effect)) { plugin.getLogger().warning("Upgrade " + id + ": unbekannter effect '" + effect + "'"); continue; }
             if (!List.of("MONEY", "STARS", "GEMS").contains(cur)) { plugin.getLogger().warning("Upgrade " + id + ": unbekannte currency '" + cur + "'"); continue; }
             List<Long> costs = new ArrayList<>();
             for (Object o : c.getList("costs", List.of())) if (o instanceof Number n) costs.add(n.longValue());
@@ -68,6 +68,7 @@ public final class UpgradeManager {
         return switch (d.effect()) {
             case "EC_ROWS" -> "+" + d.perLevel() + " Endertruhen-Reihe(n) <dark_gray>(max. 6 Reihen)";
             case "HOMES" -> "+" + d.perLevel() + " Home(s)";
+            case "AFK_BLOCK" -> "+" + d.perLevel() + " AFK-Block(s) <dark_gray>(du bekommst den Block sofort)";
             default -> "+" + d.perLevel() + " AH-Angebot(e)";
         };
     }
@@ -87,6 +88,10 @@ public final class UpgradeManager {
         };
         if (!paid) { Msg.error(p, "Dafür fehlt dir etwas: " + fmtCost(d, cost) + " nötig."); return false; }
         pd.upgrades.put(d.id(), lvl + 1);
+        if (d.effect().equals("AFK_BLOCK")) {
+            for (int i = 0; i < d.perLevel(); i++)
+                p.getInventory().addItem(plugin.afk().blockItem()).values().forEach(r -> p.getWorld().dropItemNaturally(p.getLocation(), r));
+        }
         Msg.ok(p, "Upgrade gekauft: " + d.name() + " <green>Stufe " + (lvl + 1) + "/" + d.maxLevel());
         return true;
     }
