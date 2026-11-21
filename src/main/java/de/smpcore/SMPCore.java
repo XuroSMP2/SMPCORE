@@ -53,6 +53,7 @@ public final class SMPCore extends JavaPlugin {
     private CrystalShopManager gemShop;
     private ClanManager clans;
     private AfkManager afk;
+    private de.smpcore.security.AntiPieChart antiPie;
     private TabManager tab;
     private OrderManager orders;
     private WarpManager warps;
@@ -217,6 +218,7 @@ public final class SMPCore extends JavaPlugin {
         upgrades = new de.smpcore.upgrade.UpgradeManager(this);
         upgrades.load();
         new de.smpcore.recipe.EndCrystalRecipe(this).load();
+        if (antiPie != null) antiPie.apply();
         spoof = new de.smpcore.spoof.SpoofManager(this);
         spoof.load();
         EconomyCommands eco = new EconomyCommands(this);
@@ -278,6 +280,9 @@ public final class SMPCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(manhunt, this);
         getServer().getPluginManager().registerEvents(punish, this);
         getServer().getPluginManager().registerEvents(new de.smpcore.afk.AfkBlockListener(this), this);
+        antiPie = new de.smpcore.security.AntiPieChart(this);
+        getServer().getPluginManager().registerEvents(antiPie, this);
+        antiPie.apply();
 
         webApi = new de.smpcore.web.WebApiManager(this);
         webApi.start();
@@ -364,6 +369,7 @@ public final class SMPCore extends JavaPlugin {
         tools.load();
         upgrades.load();
         new de.smpcore.recipe.EndCrystalRecipe(this).load();
+        if (antiPie != null) antiPie.apply();
         kits.load();
         warps.load();
         battlePass.loadConfig();

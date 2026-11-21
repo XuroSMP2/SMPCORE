@@ -414,3 +414,12 @@ endcrystal-recipe:
   remove-vanilla: true     # Vanilla-Rezept (Glas + Ghast-Träne + Enderauge) entfernen
   amount: 1
   items: ["NETHERITE_SCRAP:3", "DIAMOND:2", "GHAST_TEAR:1", "GLASS:2", "ENDER_EYE:1"]
+
+# Anti-Piechart / Anti-Base-Finding. Das F3-Piechart läuft im Client; serverseitig lässt es sich nur abmildern:
+#  - reduced-debug-info: F3 zeigt keine Koordinaten und keine Chunk-Infos
+#  - max-view-distance: begrenzte Sichtweite für Nicht-Admins (je weniger Chunks der Client hat, desto weniger kann er auswerten). 0 = aus
+# Ausnahme: Permission smpcore.admin oder smpcore.antipiechart.bypass
+anti-piechart:
+  enabled: true
+  reduced-debug-info: true
+  max-view-distance: 10
