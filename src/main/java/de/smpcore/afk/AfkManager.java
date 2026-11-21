@@ -49,8 +49,8 @@ public final class AfkManager {
     }
 
     public org.bukkit.Material blockMaterial() {
-        org.bukkit.Material m = org.bukkit.Material.matchMaterial(plugin.getConfig().getString("afk.block-material", "LODESTONE"));
-        return m == null || !m.isBlock() ? org.bukkit.Material.LODESTONE : m;
+        org.bukkit.Material m = org.bukkit.Material.matchMaterial(plugin.getConfig().getString("afk.block-material", "DIAMOND_BLOCK"));
+        return m == null || !m.isBlock() ? org.bukkit.Material.DIAMOND_BLOCK : m;
     }
 
     public ItemStack blockItem() {

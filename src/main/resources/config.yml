@@ -143,7 +143,7 @@ crystals:
 
 # AFK-Zone: Admin setzt sie mit /afk pos1, /afk pos2, /afk setspawn. Spieler kommen mit /afk hin.
 afk:
-  block-material: LODESTONE   # Material des AFK-Blocks (Upgrade afk-block)
+  block-material: DIAMOND_BLOCK   # Material des AFK-Blocks (Upgrade afk-block)
   enabled: true
   interval-seconds: 60     # alle X Sekunden in der Zone
   crystals: 1              # Stars pro Intervall (Rang-Bonus siehe ranks.yml: afk-bonus)

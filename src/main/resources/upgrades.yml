@@ -36,7 +36,7 @@ upgrades:
     lore: ["<gray>Biete mehr Items gleichzeitig im AH an."]
   afk-block:
     name: "<light_purple><bold>AFK-Block"
-    icon: LODESTONE
+    icon: DIAMOND_BLOCK
     effect: AFK_BLOCK
     currency: MONEY
     max-level: 3
