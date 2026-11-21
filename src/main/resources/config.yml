@@ -407,11 +407,10 @@ ban:
   broadcast: true          # false = Bans nur dem Team anzeigen
   appeal-text: ""          # z. B. "Entbannung: discord.gg/..." (steht im Kick-Bildschirm)
 
-# End Crystals: eigenes, sehr schweres Crafting-Rezept (ersetzt das Vanilla-Rezept).
-# shape = 3 Zeilen ('.' = leer), ingredients = Buchstabe: MATERIAL
+# End Crystals: eigenes, schweres Crafting-Rezept (formlos: Reihenfolge im Crafting-Gitter egal, max. 9 Zutaten).
+# Funktioniert auch ohne diesen Block mit den Standardwerten unten. items = MATERIAL:Anzahl
 endcrystal-recipe:
   enabled: true
-  remove-vanilla: true
+  remove-vanilla: true     # Vanilla-Rezept (Glas + Ghast-Träne + Enderauge) entfernen
   amount: 1
-  shape: ["AGA", "ENE", "AGA"]
-  ingredients: {A: NETHERITE_INGOT, G: GHAST_TEAR, E: ENDER_EYE, N: NETHER_STAR}
+  items: ["NETHERITE_SCRAP:3", "DIAMOND:2", "GHAST_TEAR:1", "GLASS:2", "ENDER_EYE:1"]
