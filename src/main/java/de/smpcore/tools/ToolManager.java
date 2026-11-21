@@ -20,7 +20,7 @@ import java.util.*;
 /** Spezial-Tools (Hammer, Excavator ...), die NxN Blöcke auf einmal abbauen. */
 public final class ToolManager {
     public record Tool(String id, Material material, String name, List<String> lore, int size, Map<String, Integer> enchants, int model,
-                       String mode, int maxBlocks, boolean leaves, boolean requireLeaves) {
+                       String mode, int maxBlocks, boolean leaves, boolean requireLeaves, String equipment) {
         public boolean tree() { return "tree".equals(mode); }
     }
 
@@ -54,7 +54,7 @@ public final class ToolManager {
             tools.put(id.toLowerCase(Locale.ROOT), new Tool(id.toLowerCase(Locale.ROOT), m, c.getString("name", id),
                     c.getStringList("lore"), size, ench, c.getInt("model", 0),
                     c.getString("mode", "area").toLowerCase(Locale.ROOT), Math.max(1, Math.min(500, c.getInt("max-blocks", 200))),
-                    c.getBoolean("leaves", true), c.getBoolean("require-leaves", true)));
+                    c.getBoolean("leaves", true), c.getBoolean("require-leaves", true), c.getString("equipment", "")));
         }
     }
 
@@ -82,6 +82,14 @@ public final class ToolManager {
             if (en != null) meta.addEnchant(en, e.getValue(), true);
         }
         if (t.model() > 0) meta.setCustomModelData(t.model());
+        if (!t.equipment().isEmpty()) { // Resource-Pack: eigene Rüstungsoptik am Körper (assets/<ns>/equipment/<name>.json)
+            NamespacedKey eqKey = NamespacedKey.fromString(t.equipment());
+            if (eqKey != null) {
+                var eq = meta.getEquippable();
+                eq.setModel(eqKey);
+                meta.setEquippable(eq);
+            }
+        }
         meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, t.id());
         it.setItemMeta(meta);
         return it;
