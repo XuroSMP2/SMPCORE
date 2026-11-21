@@ -36,32 +36,7 @@ public final class ToolManager {
         this.expKey = new NamespacedKey(plugin, "tool_expires");
     }
 
-    private final List<NamespacedKey> recipeKeys = new ArrayList<>();
-
-    private void registerRecipe(Tool t, ConfigurationSection rc) {
-        try {
-            List<String> shape = rc.getStringList("shape");
-            ConfigurationSection ing = rc.getConfigurationSection("ingredients");
-            if (shape.isEmpty() || shape.size() > 3 || ing == null) return;
-            NamespacedKey rk = new NamespacedKey(plugin, "tool_" + t.id());
-            org.bukkit.inventory.ShapedRecipe r = new org.bukkit.inventory.ShapedRecipe(rk, create(t, 1, 0L));
-            r.shape(shape.stream().map(l -> l.replace('.', ' ')).toArray(String[]::new));
-            for (String k : ing.getKeys(false)) {
-                Material m = Material.matchMaterial(ing.getString(k, ""));
-                if (m == null || k.length() != 1) { plugin.getLogger().warning("Rezept " + t.id() + ": ungültige Zutat " + k); return; }
-                r.setIngredient(k.charAt(0), m);
-            }
-            Bukkit.removeRecipe(rk);
-            Bukkit.addRecipe(r);
-            recipeKeys.add(rk);
-        } catch (Exception ex) {
-            plugin.getLogger().warning("Rezept für " + t.id() + " ungültig: " + ex.getMessage());
-        }
-    }
-
     public void load() {
-        for (NamespacedKey rk : recipeKeys) Bukkit.removeRecipe(rk);
-        recipeKeys.clear();
         tools.clear();
         YamlConfiguration y = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "tools.yml"));
         ConfigurationSection s = y.getConfigurationSection("tools");
@@ -81,8 +56,6 @@ public final class ToolManager {
                     c.getStringList("lore"), size, ench, c.getInt("model", 0),
                     c.getString("mode", "area").toLowerCase(Locale.ROOT), Math.max(1, Math.min(500, c.getInt("max-blocks", 200))),
                     c.getBoolean("leaves", true), c.getBoolean("require-leaves", true), c.getString("equipment", "")));
-            ConfigurationSection rc = c.getConfigurationSection("recipe");
-            if (rc != null) registerRecipe(tools.get(id.toLowerCase(Locale.ROOT)), rc);
         }
     }
 

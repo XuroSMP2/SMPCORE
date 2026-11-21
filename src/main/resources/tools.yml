@@ -2,8 +2,6 @@
 # Sneaken = nur 1 Block. Geben: /tool give <Spieler> <id> [Anzahl]
 # model = Custom-Model-Data für das Resource-Pack (resourcepack/XuroSMP-Pack.zip), 0 = Standard-Optik
 # material: Pickaxe/Shovel/Axe/Hoe bestimmt, welche Blöcke abgebaut werden.
-# recipe: (optional) Crafting-Rezept: shape = 3 Zeilen, '.' = leer; ingredients = Buchstabe: MATERIAL. Das Ergebnis ist dauerhaft (läuft nicht ab).
-#         Rezepte werden beim Plugin-Reload neu registriert. Ohne 'recipe' gibt es keins.
 # mode: tree = Holzfäller-Modus (fällt ganze Bäume), sonst NxN-Fläche mit size.
 tools:
   hammer:
@@ -40,9 +38,6 @@ tools:
     enchants: {EFFICIENCY: 5, UNBREAKING: 3, MENDING: 1}
   # --- Crystal-Ausrüstung (Stars Shop, size 1 = normales Item mit Namen und Verzauberungen) ---
   crystal_helmet:
-    recipe:
-      shape: ["AAA","ANA","..."]
-      ingredients: {A: NETHERITE_BLOCK, N: NETHER_STAR}
     material: NETHERITE_HELMET
     name: "<light_purple><bold>Crystal Helm"
     lore: ["<gray>Crystal-Ausrüstung"]
@@ -51,9 +46,6 @@ tools:
     equipment: xurosmp:crystal   # Rüstungs-Textur am Körper (Resource-Pack)
     enchants: {PROTECTION: 4, UNBREAKING: 3, MENDING: 1, RESPIRATION: 3, AQUA_AFFINITY: 1}
   crystal_chestplate:
-    recipe:
-      shape: ["ANA","ADA","AAA"]
-      ingredients: {A: NETHERITE_BLOCK, N: NETHER_STAR, D: DRAGON_EGG}
     material: NETHERITE_CHESTPLATE
     name: "<light_purple><bold>Crystal Brustplatte"
     lore: ["<gray>Crystal-Ausrüstung"]
@@ -62,9 +54,6 @@ tools:
     equipment: xurosmp:crystal   # Rüstungs-Textur am Körper (Resource-Pack)
     enchants: {PROTECTION: 4, UNBREAKING: 3, MENDING: 1}
   crystal_leggings:
-    recipe:
-      shape: ["AAA","NDN","A.A"]
-      ingredients: {A: NETHERITE_BLOCK, N: NETHER_STAR, D: HEAVY_CORE}
     material: NETHERITE_LEGGINGS
     name: "<light_purple><bold>Crystal Hose"
     lore: ["<gray>Crystal-Ausrüstung"]
@@ -73,9 +62,6 @@ tools:
     equipment: xurosmp:crystal   # Rüstungs-Textur am Körper (Resource-Pack)
     enchants: {PROTECTION: 4, UNBREAKING: 3, MENDING: 1}
   crystal_boots:
-    recipe:
-      shape: ["A.A","ANA","..."]
-      ingredients: {A: NETHERITE_BLOCK, N: NETHER_STAR}
     material: NETHERITE_BOOTS
     name: "<light_purple><bold>Crystal Stiefel"
     lore: ["<gray>Crystal-Ausrüstung"]
@@ -84,9 +70,6 @@ tools:
     equipment: xurosmp:crystal   # Rüstungs-Textur am Körper (Resource-Pack)
     enchants: {PROTECTION: 4, UNBREAKING: 3, MENDING: 1, FEATHER_FALLING: 4, DEPTH_STRIDER: 3}
   crystal_sword:
-    recipe:
-      shape: [".N.",".A.",".S."]
-      ingredients: {A: NETHERITE_BLOCK, N: NETHER_STAR, S: END_ROD}
     material: NETHERITE_SWORD
     name: "<light_purple><bold>Crystal Schwert"
     lore: ["<gray>Crystal-Ausrüstung"]
@@ -94,9 +77,6 @@ tools:
     model: 3
     enchants: {SHARPNESS: 5, LOOTING: 3, UNBREAKING: 3, MENDING: 1, SWEEPING_EDGE: 3}
   crystal_axe:
-    recipe:
-      shape: ["NA.","NS.",".S."]
-      ingredients: {A: NETHERITE_BLOCK, N: NETHER_STAR, S: END_ROD}
     material: NETHERITE_AXE
     name: "<light_purple><bold>Crystal Axt"
     lore: ["<gray>Crystal-Ausrüstung"]
@@ -104,9 +84,6 @@ tools:
     model: 2
     enchants: {SHARPNESS: 5, EFFICIENCY: 5, UNBREAKING: 3, MENDING: 1}
   crystal_pickaxe:
-    recipe:
-      shape: ["ANA",".S.",".S."]
-      ingredients: {A: NETHERITE_BLOCK, N: NETHER_STAR, S: END_ROD}
     material: NETHERITE_PICKAXE
     name: "<light_purple><bold>Crystal Spitzhacke"
     lore: ["<gray>Crystal-Ausrüstung"]
@@ -115,9 +92,6 @@ tools:
     enchants: {EFFICIENCY: 5, FORTUNE: 3, UNBREAKING: 3, MENDING: 1}
   # --- Crystal-Eimer: unendlich, werden beim Platzieren nie leer (mode: infinite) ---
   crystal_lavabucket:
-    recipe:
-      shape: ["NAN","ALA",".A."]
-      ingredients: {A: NETHERITE_INGOT, N: NETHER_STAR, L: LAVA_BUCKET}
     material: LAVA_BUCKET
     name: "<red><bold>Crystal Lava Bucket"
     lore: ["<gray>Unendliche Lava"]
@@ -126,9 +100,6 @@ tools:
     model: 12
     enchants: {}
   crystal_waterbucket:
-    recipe:
-      shape: ["NAN","AWA",".A."]
-      ingredients: {A: NETHERITE_INGOT, N: NETHER_STAR, W: WATER_BUCKET}
     material: WATER_BUCKET
     name: "<aqua><bold>Crystal Water Bucket"
     lore: ["<gray>Unendliches Wasser"]
