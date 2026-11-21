@@ -406,3 +406,12 @@ ban:
   require-reason: true
   broadcast: true          # false = Bans nur dem Team anzeigen
   appeal-text: ""          # z. B. "Entbannung: discord.gg/..." (steht im Kick-Bildschirm)
+
+# End Crystals: eigenes, sehr schweres Crafting-Rezept (ersetzt das Vanilla-Rezept).
+# shape = 3 Zeilen ('.' = leer), ingredients = Buchstabe: MATERIAL
+endcrystal-recipe:
+  enabled: true
+  remove-vanilla: true
+  amount: 1
+  shape: ["AGA", "ENE", "AGA"]
+  ingredients: {A: NETHERITE_INGOT, G: GHAST_TEAR, E: ENDER_EYE, N: NETHER_STAR}

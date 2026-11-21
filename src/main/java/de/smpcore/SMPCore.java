@@ -216,6 +216,7 @@ public final class SMPCore extends JavaPlugin {
         manhunt.start();
         upgrades = new de.smpcore.upgrade.UpgradeManager(this);
         upgrades.load();
+        new de.smpcore.recipe.EndCrystalRecipe(this).load();
         spoof = new de.smpcore.spoof.SpoofManager(this);
         spoof.load();
         EconomyCommands eco = new EconomyCommands(this);
@@ -362,6 +363,7 @@ public final class SMPCore extends JavaPlugin {
         spawners.loadConfig();
         tools.load();
         upgrades.load();
+        new de.smpcore.recipe.EndCrystalRecipe(this).load();
         kits.load();
         warps.load();
         battlePass.loadConfig();
