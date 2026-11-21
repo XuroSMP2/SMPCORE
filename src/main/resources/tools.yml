@@ -23,12 +23,13 @@ tools:
     name: "<dark_red><bold>Mega-Hammer"
     lore: ["<gray>Baut 5x5 Blöcke ab", "<dark_gray>Sneaken = nur 1 Block"]
     size: 5
-    model: 9
+    model: 11
     enchants: {EFFICIENCY: 6, UNBREAKING: 5, MENDING: 1}
   lumberaxe:
     material: NETHERITE_AXE
     name: "<gold><bold>Holzfäller-Axt"
     lore: ["<gray>Fällt den ganzen Baum auf einmal"]  # darunter steht automatisch der Sneak-Hinweis
+    model: 8               # Resource-Pack: grüne Crystal-Axt
     mode: tree             # tree = ganzer Baum (Stämme + Blätter), Standard "area" = NxN-Fläche
     max-blocks: 200        # max. Stämme pro Baum (zusätzlich begrenzt durch die Haltbarkeit)
     leaves: true           # natürliche Blätter mit abbauen
