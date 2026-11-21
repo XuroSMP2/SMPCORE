@@ -38,8 +38,8 @@ upgrades:
     name: "<light_purple><bold>AFK-Block"
     icon: LODESTONE
     effect: AFK_BLOCK
-    currency: GEMS
+    currency: MONEY
     max-level: 3
     per-level: 1
-    costs: [50, 100, 200]
+    costs: [50000000]
     lore: ["<gray>Ein Block, auf dem du als AFK zählst –", "<gray>auch außerhalb der AFK-Zone (Stars)."]
