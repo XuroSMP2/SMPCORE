@@ -298,13 +298,18 @@ repair:
 links:
   wiki: ""                 # z.B. https://dein-wiki.netlify.app
 rules:
-  - "<gray>1. <white>Respekt: keine Beleidigungen, Hetze oder Diskriminierung."
-  - "<gray>2. <white>Keine Cheats, Hacked Clients oder X-Ray."
-  - "<gray>3. <white>Keine Bug- oder Dupe-Ausnutzung – melde Fehler dem Team."
-  - "<gray>4. <white>Kein AFK-Farming mit Makros oder Alts."
-  - "<gray>5. <white>Kein Scamming, kein Echtgeld-Handel."
-  - "<gray>6. <white>Keine Werbung, kein Spam."
-  - "<gray>Alle Regeln: <white>/wiki"
+  - "<gray>1. <white>Allgemeines: Mit dem Beitritt akzeptierst du die Regeln. Anweisungen des Teams sind zu befolgen. Regellücken auszunutzen ist ebenfalls ein Verstoß."
+  - "<gray>2. <white>Community: Respekt, keine Beleidigungen, Mobbing oder Diskriminierung. Kein Spam, kein Caps-Missbrauch."
+  - "<gray>3. <white>Gameplay: Keine Cheats, Hacks oder unerlaubte Mods. Bugs und Exploits nicht ausnutzen, sondern melden. Keine Lag-Farmen."
+  - "<gray>4. <white>Bauen: Fremde Bauten respektieren. Kein Griefing, nichts ohne Zustimmung verändern."
+  - "<gray>5. <white>PvP: Nur mit Einverständnis oder in PvP-Bereichen. Kein Stehlen aus fremden Inventaren oder Kisten."
+  - "<gray>6. <white>Handel: Fair und freiwillig. Kein Betrug, keine duplizierten Items oder Exploit-Ressourcen, keine Preismanipulation."
+  - "<gray>7. <white>Discord: Die Discord-Regeln gelten zusätzlich. Keine Werbung, keine schädlichen Links, keine privaten Daten anderer."
+  - "<gray>8. <white>Accounts: Kein Ban-Umgehen mit Zweitaccounts, keine fremden Accounts nutzen, keine Manipulation von Plugins."
+  - "<gray>9. <white>Inhalte: Keine pornografischen, extremen, illegalen oder diskriminierenden Inhalte oder Links."
+  - "<gray>10. <white>Support: Probleme per Ticket oder an das Team melden. Strafen nicht öffentlich diskutieren."
+  - "<gray>11. <white>Strafen: Verwarnung, Timeout, Kick, temporärer oder permanenter Bann je nach Schwere."
+  - "<gray>Gilt auch auf Discord. Alle Regeln im Wortlaut: <white>/wiki"
 
 # ===== Spezial-Tools (/smptools give <Spieler> <Tool> [Zeit]) =====
 # Ohne Zeitangabe gehen die Tools nach dieser Zeit kaputt. Format: 3d, 12h, 1d12h, 30m; 0 = unbegrenzt.
