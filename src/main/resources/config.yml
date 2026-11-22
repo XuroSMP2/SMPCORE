@@ -132,6 +132,9 @@ economy:
   starting-money: 1000
   starting-crystals: 0     # Stars = AFK-Währung
   starting-gems: 0         # Gems = Store-Währung
+  # Geld-Audit: Gutschriften ab diesem Betrag landen in plugins/SMPCore/economy-audit.log (Zeit, Spieler, Betrag, Auslöser im Code).
+  audit-threshold: 1000000 # 0 = Audit aus
+  audit-alarm: 1000000000  # ab diesem Betrag Warnung im Chat an online Admins
 
 # Stars = AFK-Währung (verdient in der AFK-Zone, ausgegeben im Stars-Shop /crystalshop).
 # Optional zusätzlich pro Kill / Spielzeit (Standard: aus):
@@ -423,3 +426,4 @@ anti-piechart:
   enabled: true
   reduced-debug-info: true
   max-view-distance: 10
+

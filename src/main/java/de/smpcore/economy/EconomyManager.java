@@ -26,7 +26,33 @@ public final class EconomyManager {
         PlayerData d = data.get(id);
         if (d != null) d.money = round(Math.max(0, a));
     }
-    public void add(UUID id, double a) { set(id, balance(id) + a); }
+    public void add(UUID id, double a) {
+        audit(id, a);
+        set(id, balance(id) + a);
+    }
+
+    /** Protokolliert große Gutschriften (economy-audit.log) samt Aufrufer, damit sich Geld-Bugs/Exploits zurückverfolgen lassen. */
+    private void audit(UUID id, double a) {
+        try {
+            de.smpcore.SMPCore pl = de.smpcore.SMPCore.get();
+            if (pl == null) return;
+            double th = pl.getConfig().getDouble("economy.audit-threshold", 1_000_000);
+            if (th <= 0 || a < th) return;
+            String caller = StackWalker.getInstance().walk(f -> f.map(x -> x.getClassName() + "." + x.getMethodName() + ":" + x.getLineNumber())
+                    .filter(x -> !x.contains("EconomyManager")).limit(3).collect(java.util.stream.Collectors.joining(" <- ")));
+            PlayerData d = data.get(id);
+            String name = d == null ? id.toString() : d.name;
+            String line = java.time.LocalDateTime.now() + " +" + Math.round(a) + " an " + name + " (vorher " + Math.round(balance(id)) + ") durch " + caller + "\n";
+            java.nio.file.Files.writeString(new java.io.File(pl.getDataFolder(), "economy-audit.log").toPath(), line,
+                    java.nio.charset.StandardCharsets.UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND);
+            double alarm = pl.getConfig().getDouble("economy.audit-alarm", 1_000_000_000);
+            if (a >= alarm) {
+                String msg = "<red>[Geld-Alarm] <white>" + de.smpcore.util.Msg.esc(name) + " <gray>bekommt <gold>" + Num.format(a) + " <gray>(" + caller.split(" <- ")[0] + ")";
+                org.bukkit.Bukkit.getScheduler().runTask(pl, () -> org.bukkit.Bukkit.getOnlinePlayers().stream().filter(o -> o.hasPermission("smpcore.admin"))
+                        .forEach(o -> de.smpcore.util.Msg.send(o, msg)));
+            }
+        } catch (Throwable ignored) { /* Audit darf nie die Wirtschaft stören */ }
+    }
     public boolean take(UUID id, double a) {
         if (!has(id, a)) return false;
         set(id, balance(id) - a);
