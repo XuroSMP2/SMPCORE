@@ -55,6 +55,7 @@ public final class EconomyCommands implements TabExecutor {
         PlayerData t = plugin.data().find(a[0]);
         if (t == null) { Msg.error(s, "Spieler nicht gefunden."); return; }
         if (t.uuid.equals(p.getUniqueId())) { Msg.error(s, "Du kannst dir nicht selbst Geld senden."); return; }
+        if (!plugin.settings().on(t.uuid, "pay") && !p.hasPermission("smpcore.admin")) { Msg.error(s, Msg.esc(t.name) + " nimmt kein Geld an."); return; }
         double amt;
         try { amt = Num.parse(a[1]); } catch (NumberFormatException ex) { Msg.error(s, "Ungültiger Betrag."); return; }
         if (amt < 1) { Msg.error(s, "Mindestbetrag: $1"); return; }
@@ -135,6 +136,7 @@ public final class EconomyCommands implements TabExecutor {
         List<Player> to = new java.util.ArrayList<>();
         for (Player o : plugin.getServer().getOnlinePlayers()) {
             if (o.getUniqueId().equals(p.getUniqueId()) || plugin.vanished().contains(o.getUniqueId())) continue;
+            if (!plugin.settings().on(o.getUniqueId(), "pay")) continue;
             to.add(o);
         }
         if (to.isEmpty()) { Msg.error(p, "Es ist sonst niemand online."); return; }
@@ -159,6 +161,7 @@ public final class EconomyCommands implements TabExecutor {
         if (a[1].equals("*")) { payAll(p, a[2], true); return; }
         PlayerData t = plugin.data().find(a[1]);
         if (t == null || t.uuid.equals(p.getUniqueId())) { Msg.error(s, "Ungültiger Spieler."); return; }
+        if (!plugin.settings().on(t.uuid, "pay") && !p.hasPermission("smpcore.admin")) { Msg.error(s, Msg.esc(t.name) + " nimmt keine Stars an."); return; }
         long amt;
         try { amt = (long) Num.parse(a[2]); } catch (NumberFormatException ex) { Msg.error(s, "Ungültige Menge."); return; }
         if (amt < 1) { Msg.error(s, "Mindestens 1 Kristall."); return; }

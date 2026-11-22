@@ -166,6 +166,10 @@ public final class UtilityCommands implements TabExecutor {
     }
 
     private void dm(Player from, Player to, String text) {
+        if (!plugin.settings().on(to.getUniqueId(), "msg") && !from.hasPermission("smpcore.admin")) {
+            Msg.error(from, Msg.esc(to.getName()) + " hat private Nachrichten ausgeschaltet.");
+            return;
+        }
         String t = Msg.esc(text);
         from.sendMessage(Msg.c("<dark_gray>[<gray>Du <dark_gray>→ <white>" + Msg.esc(to.getName()) + "<dark_gray>] <gray>" + t));
         to.sendMessage(Msg.c("<dark_gray>[<white>" + Msg.esc(from.getName()) + " <dark_gray>→ <gray>Du<dark_gray>] <gray>" + t));

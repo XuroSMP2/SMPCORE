@@ -74,6 +74,7 @@ public final class TeleportCommands implements TabExecutor {
                 if (a.length < 1) { Msg.error(p, "Nutzung: /tpa <Spieler>"); return true; }
                 Player t = Players.online(a[0]);
                 if (t == null || t.equals(p)) { Msg.error(p, "Spieler nicht gefunden."); return true; }
+                if (!plugin.settings().on(t.getUniqueId(), "tpa") && !p.hasPermission("smpcore.admin")) { Msg.error(p, Msg.esc(t.getName()) + " nimmt keine TP-Anfragen an."); return true; }
                 tp.request(p, t);
                 Msg.send(p, "Anfrage an <white>" + Msg.esc(t.getName()) + " <gray>gesendet (60s gültig).");
                 t.sendMessage(Msg.c("<gray>» <white>" + Msg.esc(p.getName()) + " <gray>möchte sich zu dir teleportieren. "
@@ -85,6 +86,7 @@ public final class TeleportCommands implements TabExecutor {
                 if (a.length < 1) { Msg.error(p, "Nutzung: /tpahere <Spieler>"); return true; }
                 Player t = Players.online(a[0]);
                 if (t == null || t.equals(p)) { Msg.error(p, "Spieler nicht gefunden."); return true; }
+                if (!plugin.settings().on(t.getUniqueId(), "tpa") && !p.hasPermission("smpcore.admin")) { Msg.error(p, Msg.esc(t.getName()) + " nimmt keine TP-Anfragen an."); return true; }
                 tp.request(p, t, true);
                 Msg.send(p, "Anfrage an <white>" + Msg.esc(t.getName()) + " <gray>gesendet (60s gültig).");
                 t.sendMessage(Msg.c("<gray>» <white>" + Msg.esc(p.getName()) + " <gray>möchte, dass du dich zu ihm teleportierst. "

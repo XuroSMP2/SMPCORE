@@ -83,6 +83,7 @@ public final class SMPCore extends JavaPlugin {
     private de.smpcore.link.LinkManager link;
     private de.smpcore.spoof.SpoofManager spoof;
     private de.smpcore.upgrade.UpgradeManager upgrades;
+    private de.smpcore.settings.SettingsManager settings;
     private de.smpcore.manhunt.ManhuntManager manhunt;
     private de.smpcore.staff.PunishManager punish;
 
@@ -122,6 +123,7 @@ public final class SMPCore extends JavaPlugin {
     public de.smpcore.link.LinkManager link() { return link; }
     public de.smpcore.spoof.SpoofManager spoof() { return spoof; }
     public de.smpcore.upgrade.UpgradeManager upgrades() { return upgrades; }
+    public de.smpcore.settings.SettingsManager settings() { return settings; }
     public de.smpcore.manhunt.ManhuntManager manhunt() { return manhunt; }
     public de.smpcore.staff.PunishManager punish() { return punish; }
 
@@ -215,6 +217,8 @@ public final class SMPCore extends JavaPlugin {
         manhunt = new de.smpcore.manhunt.ManhuntManager(this);
         manhunt.load();
         manhunt.start();
+        settings = new de.smpcore.settings.SettingsManager(this);
+        getServer().getPluginManager().registerEvents(settings, this);
         upgrades = new de.smpcore.upgrade.UpgradeManager(this);
         upgrades.load();
         new de.smpcore.recipe.EndCrystalRecipe(this).load();
@@ -237,6 +241,7 @@ public final class SMPCore extends JavaPlugin {
         reg("verify", new de.smpcore.commands.VerifyCommand(this));
         reg("spoof", new de.smpcore.commands.SpoofCommand(this));
         reg("upgrades", new de.smpcore.commands.UpgradesCommand(this));
+        reg("settings", new de.smpcore.commands.SettingsCommand(this));
         reg("manhunt", new de.smpcore.commands.ManhuntCommand(this));
         de.smpcore.commands.PunishCommands pcmd = new de.smpcore.commands.PunishCommands(this);
         for (String n : new String[]{"ban", "tempban", "unban", "lookup", "banlist"}) reg(n, pcmd);

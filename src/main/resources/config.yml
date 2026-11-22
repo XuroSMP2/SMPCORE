@@ -116,6 +116,7 @@ chat:
 
 # Features an/aus (geht auch im Admin Panel)
 features:
+  settings: true
   shop: true
   auction: true
   bounty: true
@@ -432,3 +433,9 @@ anti-piechart:
   reduced-debug-info: true
   max-view-distance: 10
 
+
+# /settings: persönliche Einstellungen (Monster-Spawns, Scoreboard, Kontostand unter dem Namen, Nachrichten, TPA, Pay, Nachtsicht).
+# Feature an/aus: features.settings. Nachtsicht braucht die Permission smpcore.settings.nightvision.
+settings:
+  mobspawn-radius: 64          # Spieler in diesem Umkreis zählen für "Monster-Spawns aus"
+  balance-below-name: true     # Kontostand unter dem Namen (jeder Spieler kann es in /settings aus-/einschalten)

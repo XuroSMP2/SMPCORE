@@ -30,6 +30,7 @@ public final class PlayerData {
     public final Map<String, Integer> keys = new HashMap<>();
     public final Map<String, String> homes = new LinkedHashMap<>();
     public final Map<String, Set<UUID>> homeShares = new HashMap<>(); // Home-Name -> Spieler, die es nutzen dürfen
+    public final Map<String, Boolean> settings = new HashMap<>();       // /settings: Schalter-ID -> an/aus
     public final Map<String, Integer> upgrades = new HashMap<>();     // Upgrade-ID -> Stufe
 
     public PlayerData(UUID uuid, String name) {

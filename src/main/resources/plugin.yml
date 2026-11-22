@@ -82,6 +82,9 @@ commands:
     description: Clan-System
   manhunt:
     description: Manhunt - Preisgeld auf einen Spieler (/manhunt <Spieler> <Preis> <Währung> <Zeit>)
+  settings:
+    description: Persönliche Einstellungen (Monster-Spawns, Scoreboard, Nachrichten, TPA, Pay, Kontostand unter dem Namen)
+    aliases: [einstellungen, setting]
   upgrades:
     description: Upgrades kaufen (Endertruhe, Homes, AH-Angebote)
     aliases: [upgrade]
@@ -213,6 +216,9 @@ commands:
     description: Keyall-Timer anzeigen / steuern
 
 permissions:
+  smpcore.settings.nightvision:
+    description: Nachtsicht in /settings nutzen
+    default: op
   smpcore.admin:
     description: Voller Zugriff auf alles
     default: op

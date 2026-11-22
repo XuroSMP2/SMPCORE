@@ -53,6 +53,8 @@ public final class DataManager {
                 d.signCount = c.getInt("signCount");
                 ConfigurationSection k = c.getConfigurationSection("keys");
                 if (k != null) for (String crate : k.getKeys(false)) d.keys.put(crate, k.getInt(crate));
+                ConfigurationSection st = c.getConfigurationSection("settings");
+                if (st != null) for (String sk : st.getKeys(false)) d.settings.put(sk, st.getBoolean(sk));
                 ConfigurationSection kt = c.getConfigurationSection("kits");
                 if (kt != null) for (String kid : kt.getKeys(false)) d.kitUsed.put(kid, kt.getLong(kid));
                 ConfigurationSection h = c.getConfigurationSection("homes");
@@ -102,6 +104,7 @@ public final class DataManager {
             d.keys.forEach((k, v) -> { if (v > 0) y.set(b + "keys." + k, v); });
             d.homes.forEach((k, v) -> y.set(b + "homes." + k, v));
             d.kitUsed.forEach((k, v) -> y.set(b + "kits." + k, v));
+            d.settings.forEach((k, v) -> y.set(b + "settings." + k, v));
             d.homeShares.forEach((k, v) -> { if (!v.isEmpty()) y.set(b + "homeShares." + k, v.stream().map(UUID::toString).toList()); });
             d.upgrades.forEach((k, v) -> { if (v > 0) y.set(b + "upgrades." + k, v); });
         }
