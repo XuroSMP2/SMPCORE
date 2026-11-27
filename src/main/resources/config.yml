@@ -300,10 +300,10 @@ links:
   wiki: ""                 # z.B. https://dein-wiki.netlify.app
 rules:
   - "<gray>1. <white>Allgemeines: Mit dem Beitritt akzeptierst du die Regeln. Anweisungen des Teams sind zu befolgen. Regellücken auszunutzen ist ebenfalls ein Verstoß."
-  - "<gray>2. <white>Community: Respekt, keine Beleidigungen, Mobbing oder Diskriminierung. Kein Spam, kein Caps-Missbrauch."
-  - "<gray>3. <white>Gameplay: Keine Cheats, Hacks oder unerlaubte Mods. Bugs und Exploits nicht ausnutzen, sondern melden. Keine Lag-Farmen."
-  - "<gray>4. <white>Bauen: Fremde Bauten respektieren. Kein Griefing, nichts ohne Zustimmung verändern."
-  - "<gray>5. <white>PvP: Nur mit Einverständnis oder in PvP-Bereichen. Kein Stehlen aus fremden Inventaren oder Kisten."
+  - "<gray>2. <white>Community: Respekt, keine Beleidigungen, Mobbing oder Diskriminierung. Griefing bleibt im Spiel, keine Drohungen oder Beleidigungen deswegen. Kein Spam."
+  - "<gray>3. <white>Gameplay: Keine Cheats, Hacks, X-Ray oder unerlaubte Mods. Bugs und Exploits nicht ausnutzen, sondern melden. Keine Lag-Farmen."
+  - "<gray>4. <white>Griefing ist erlaubt: Fremde Bauten dürfen zerstört und geplündert werden, das Team stellt nichts wieder her. Nicht erlaubt: Griefing mit Cheats oder Lag-Maschinen sowie Schäden an Spawn, Warps und Team-Bauten."
+  - "<gray>5. <white>PvP: Überall erlaubt, außer in gekennzeichneten Bereichen. Kein Spawnkilling, kein Combat-Logging. Items aus Kisten und Todesdrops dürfen genommen werden."
   - "<gray>6. <white>Handel: Fair und freiwillig. Kein Betrug, keine duplizierten Items oder Exploit-Ressourcen, keine Preismanipulation."
   - "<gray>7. <white>Discord: Die Discord-Regeln gelten zusätzlich. Keine Werbung, keine schädlichen Links, keine privaten Daten anderer."
   - "<gray>8. <white>Accounts: Kein Ban-Umgehen mit Zweitaccounts, keine fremden Accounts nutzen, keine Manipulation von Plugins."
