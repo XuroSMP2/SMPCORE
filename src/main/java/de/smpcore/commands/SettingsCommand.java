@@ -4,12 +4,14 @@ import de.smpcore.SMPCore;
 import de.smpcore.gui.SettingsMenu;
 import de.smpcore.util.Msg;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 /** /settings: öffnet das Einstellungs-Menü. */
-public final class SettingsCommand implements CommandExecutor {
+public final class SettingsCommand implements TabExecutor {
     private final SMPCore plugin;
     public SettingsCommand(SMPCore plugin) { this.plugin = plugin; }
 
@@ -20,4 +22,7 @@ public final class SettingsCommand implements CommandExecutor {
         new SettingsMenu(p).open();
         return true;
     }
+
+    @Override
+    public List<String> onTabComplete(CommandSender s, Command c, String label, String[] a) { return List.of(); }
 }
