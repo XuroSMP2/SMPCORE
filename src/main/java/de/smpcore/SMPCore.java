@@ -74,6 +74,8 @@ public final class SMPCore extends JavaPlugin {
     private TeleportManager teleports;
     private RankManager ranks;
     private KeyallManager keyall;
+    private de.smpcore.advent.AdventManager advent;
+    private de.smpcore.xmas.XmasManager xmas;
     private SpawnerManager spawners;
     private ToolManager tools;
     private de.smpcore.web.WebApiManager webApi;
@@ -114,6 +116,8 @@ public final class SMPCore extends JavaPlugin {
     public TeleportManager teleports() { return teleports; }
     public RankManager ranks() { return ranks; }
     public KeyallManager keyall() { return keyall; }
+    public de.smpcore.advent.AdventManager advent() { return advent; }
+    public de.smpcore.xmas.XmasManager xmas() { return xmas; }
     public SpawnerManager spawners() { return spawners; }
     public ToolManager tools() { return tools; }
     public de.smpcore.web.WebApiManager webApi() { return webApi; }
@@ -133,7 +137,7 @@ public final class SMPCore extends JavaPlugin {
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
-        for (String f : new String[]{"shop.yml", "crates.yml", "crystalshop.yml", "ranks.yml", "spawners.yml", "tools.yml", "gemshop.yml", "kits.yml", "battlepass.yml", "upgrades.yml"}) {
+        for (String f : new String[]{"shop.yml", "crates.yml", "crystalshop.yml", "ranks.yml", "spawners.yml", "tools.yml", "gemshop.yml", "kits.yml", "battlepass.yml", "upgrades.yml", "advent.yml"}) {
             if (!new File(getDataFolder(), f).exists()) saveResource(f, false);
         }
         Msg.configure(getConfig());
@@ -204,6 +208,9 @@ public final class SMPCore extends JavaPlugin {
         tools.load();
         tools.start();
         keyall = new KeyallManager(this);
+        advent = new de.smpcore.advent.AdventManager(this);
+        advent.load();
+        xmas = new de.smpcore.xmas.XmasManager(this);
         scoreboards = new ScoreboardManager(this);
         teleports = new TeleportManager(this);
 
@@ -255,6 +262,8 @@ public final class SMPCore extends JavaPlugin {
         for (String n : new String[]{"invsee", "ecsee", "gm", "freeze", "mute", "unmute", "clearchat", "skull", "rename", "ptime", "smptools"}) reg(n, stc);
         UtilityCommands uc = new UtilityCommands(this);
         for (String n : new String[]{"back", "warp", "setwarp", "delwarp", "kit", "msg", "r", "heal", "feed", "fly", "craft", "ec", "trash", "vanish", "sign"}) reg(n, uc);
+        de.smpcore.commands.XmasCommand xc = new de.smpcore.commands.XmasCommand(this);
+        for (String n : new String[]{"advent", "xmas", "gift"}) reg(n, xc);
         reg("afk", new AfkCommand(this));
         SpawnerCommand spc = new SpawnerCommand(this);
         reg("spawner", spc);
@@ -297,6 +306,9 @@ public final class SMPCore extends JavaPlugin {
         scoreboards.start();
         crates.startParticles();
         keyall.start();
+        advent.start();
+        xmas.start();
+        getServer().getPluginManager().registerEvents(xmas, this);
         afk.start();
         tab.start();
         announcer.start();
@@ -381,6 +393,8 @@ public final class SMPCore extends JavaPlugin {
         holograms.load();
         holograms.start();
         keyall.reset();
+        advent.load();
+        xmas.ensureCrate();
         webApi.start();
     }
 

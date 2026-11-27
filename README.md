@@ -79,3 +79,9 @@ Danach: `/setspawn`, Crate-Block anschauen und `/crate set common`, Keys geben m
 
 ## Eigene Plugins anbinden
 `SMPCore.get().economy().add(uuid, 100)` usw. (Vault-Bridge ist nicht enthalten).
+
+## Weihnachten
+- **/advent** – Adventskalender: startet automatisch am 1. Dezember, 24 Türchen. Ein Türchen geht **nur am eigenen Tag** auf (kein Nachholen). Wer alle 24 am richtigen Tag öffnet, bekommt am 24.12. den Treue-Bonus. Belohnungen in `advent.yml`.
+- **/xmas** – Infos, `/xmas snow` schaltet den Schneefall um dich an/aus. **/gift <Spieler>** – verschenkt den Gegenstand in der Hand.
+- Heiligabend 18 Uhr: **Bescherung** (Weihnachts-Keys + Gems für alle Online-Spieler). Die `weihnachten`-Crate legt das Plugin selbst an.
+- Testen als Admin: `/advent admin date 2026-12-05` (zurück: `/advent admin date off`), `/advent admin reset <Spieler>`.

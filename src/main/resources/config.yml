@@ -8,6 +8,9 @@ number-comma: true              # true = 48,64M (deutsch) | false = 48.64M
 prefix-format: "<green><bold>%tag%</bold> <dark_gray>▸ <gray>"
 prefixes:
   default: "SMP"
+  advent: "ADVNT"
+  xmas: "XMAS"
+  gift: "GIFT"
   balance: "MONEY"
   pay: "PAY"
   eco: "ECO"
@@ -331,6 +334,8 @@ resourcepack:
   url: ""
   sha1: "453e7464bf0ba4737bc6da50a008306ba216038d"
   force: false
+  # Weihnachts-Pack: wird in der Saison (27.11.-06.01.) statt des normalen Packs geschickt. XuroSMP-Weihnachten.zip hosten, Link + SHA-1 eintragen.
+  xmas: {enabled: false, url: "", sha1: ""}
   prompt: "<yellow>XuroSMP Resource-Pack: schönere Tools, Scoreboard und TAB-Liste!"
   logo: {glyph: "\uE100", fallback: "<aqua><bold>⚔ %server% ⚔"}
   icons:
@@ -439,3 +444,19 @@ anti-piechart:
 settings:
   mobspawn-radius: 64          # Spieler in diesem Umkreis zählen für "Monster-Spawns aus"
   balance-below-name: true     # Kontostand unter dem Namen (jeder Spieler kann es in /settings aus-/einschalten)
+
+# ===== Weihnachten =====
+# Adventskalender: startet automatisch am 1. Dezember. Türchen N lässt sich NUR am N. Dezember öffnen (kein Nachholen).
+# Belohnungen pro Türchen: advent.yml.  Testen als Admin: /advent admin date 2026-12-05  (zurück: /advent admin date off)
+advent:
+  enabled: true
+  timezone: "Europe/Berlin"
+  test-date: ""
+xmas:
+  enabled: true            # Saison automatisch 27.11. bis 06.01.
+  snow: true               # Schneeflocken um die Spieler (pro Spieler abschaltbar: /xmas snow)
+  gift-enabled: true       # /gift <Spieler>
+  crate: "weihnachten"     # wird automatisch angelegt, falls sie fehlt (Platzieren: /crate set weihnachten)
+  bescherung-time: "18:00" # Heiligabend: alle Online-Spieler bekommen Keys + Gems
+  bescherung-keys: 3
+  bescherung-gems: 25

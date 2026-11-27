@@ -1,0 +1,33 @@
+# Adventskalender-Belohnungen (Türchen 1-24 = 1.-24. Dezember). Nach Änderungen: /smpcore reload
+# Formate:
+#   money <Betrag>            crystals <Anzahl> (Stars)        gems <Anzahl>
+#   key <Crate-ID> <Anzahl>   (z.B. weihnachten, common, rare)
+#   item <MATERIAL> <Anzahl> [cmd=<Modell>] [Anzeigename mit MiniMessage]
+#     cmd=20 Geschenk, 21 Zuckerstange, 22 Plätzchen, 23 Weihnachtsstern (nur mit Weihnachts-Pack sichtbar)
+days:
+  1:  ["money 2500", "item COOKIE 8 cmd=22 <gold>Weihnachtsplätzchen"]
+  2:  ["crystals 2", "item COOKED_BEEF 16"]
+  3:  ["money 5000", "key weihnachten 1"]
+  4:  ["gems 5", "item BREAD 16"]
+  5:  ["money 7500", "item STICK 3 cmd=21 <red>Zuckerstange"]
+  6:  ["crystals 4", "item IRON_INGOT 16"]
+  7:  ["key weihnachten 1", "item COOKIE 16 cmd=22 <gold>Weihnachtsplätzchen"]
+  8:  ["money 10000", "gems 5"]
+  9:  ["crystals 5", "item GOLD_INGOT 12"]
+  10: ["key weihnachten 2", "item COOKED_PORKCHOP 24"]
+  11: ["money 12500", "item DIAMOND 2"]
+  12: ["gems 10", "item EXPERIENCE_BOTTLE 16"]
+  13: ["crystals 6", "item CHEST 1 cmd=20 <red>Geschenk"]
+  14: ["key weihnachten 2", "money 10000"]
+  15: ["money 15000", "item EMERALD 16"]
+  16: ["gems 10", "item GOLDEN_CARROT 16"]
+  17: ["crystals 8", "key common 2"]
+  18: ["key weihnachten 3", "item DIAMOND 4"]
+  19: ["money 20000", "item NETHERITE_SCRAP 1"]
+  20: ["gems 15", "item COOKIE 32 cmd=22 <gold>Weihnachtsplätzchen"]
+  21: ["crystals 10", "key rare 1"]
+  22: ["money 25000", "key weihnachten 3"]
+  23: ["gems 20", "item GOLDEN_APPLE 4", "item NETHER_STAR 1 cmd=23 <yellow>Weihnachtsstern"]
+  24: ["money 50000", "crystals 15", "gems 25", "key weihnachten 5", "item CHEST 1 cmd=20 <red>Heiligabend-Geschenk"]
+# Treue-Bonus: nur wer ALLE 24 Türchen jeweils am richtigen Tag geöffnet hat (wird bei Türchen 24 mit ausgezahlt)
+perfect: ["gems 50", "key legendary 1", "key weihnachten 5", "item TOTEM_OF_UNDYING 1"]

@@ -19,9 +19,18 @@ public final class PackManager {
 
     public PackManager(SMPCore plugin) { this.plugin = plugin; }
 
+    /** In der Weihnachtssaison (27.11.-06.01.) wird – falls eingetragen – das Weihnachts-Pack statt des normalen geschickt. */
+    private boolean xmasPack() {
+        return plugin.getConfig().getBoolean("resourcepack.xmas.enabled", false)
+                && !plugin.getConfig().getString("resourcepack.xmas.url", "").isBlank()
+                && plugin.xmas() != null && plugin.xmas().seasonActive();
+    }
+
+    private String key(String leaf) { return "resourcepack." + (xmasPack() ? "xmas." : "") + leaf; }
+
     public boolean enabled() {
-        return plugin.getConfig().getBoolean("resourcepack.enabled", false)
-                && !plugin.getConfig().getString("resourcepack.url", "").isBlank();
+        return xmasPack() || (plugin.getConfig().getBoolean("resourcepack.enabled", false)
+                && !plugin.getConfig().getString(key("url"), "").isBlank());
     }
 
     public boolean isBedrock(Player p) {
@@ -36,8 +45,8 @@ public final class PackManager {
     public void send(Player p) {
         if (!enabled() || isBedrock(p)) return;
         try {
-            p.setResourcePack(plugin.getConfig().getString("resourcepack.url", ""),
-                    hex(plugin.getConfig().getString("resourcepack.sha1", "")),
+            p.setResourcePack(plugin.getConfig().getString(key("url"), ""),
+                    hex(plugin.getConfig().getString(key("sha1"), "")),
                     Msg.c(plugin.getConfig().getString("resourcepack.prompt", "")),
                     plugin.getConfig().getBoolean("resourcepack.force", false));
         } catch (Exception ex) {

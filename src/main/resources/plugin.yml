@@ -214,6 +214,15 @@ commands:
     permission: smpcore.admin
   keyall:
     description: Keyall-Timer anzeigen / steuern
+  advent:
+    description: Adventskalender (1.-24. Dezember)
+    aliases: [adventskalender, kalender]
+  xmas:
+    description: Weihnachts-Infos, Schnee an/aus
+    aliases: [weihnachten]
+  gift:
+    description: Gegenstand in der Hand verschenken
+    aliases: [geschenk]
 
 permissions:
   smpcore.settings.nightvision:
