@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Erzeugt das XuroSMP WEIHNACHTS-Pack (XuroSMP-Weihnachten.zip): alles aus dem normalen Pack (Crystal-Tools, Scoreboard-Icons)
-plus Weihnachts-Extras: rotes Geschenk-Chest-Modell (einzelne Truhe), Zuckerstange, Plätzchen, Weihnachtsstern, festliches TAB-Logo.
+Erzeugt das XuroSMP WEIHNACHTS-Pack (XuroSMP-Weihnachten.zip): das aktuelle XuroSMP-Pack.zip (Crystal-Tools, Rüstung, Icons, Logo)
+plus Weihnachts-Extras: rotes Geschenk-Chest-Modell (einzelne Truhe), Zuckerstange, Plätzchen, Weihnachtsstern.
 Alle Texturen selbst gezeichnet. Aufruf:  python3 make_xmas.py   ->   XuroSMP-Weihnachten.zip + SHA1-Weihnachten.txt
 """
 import hashlib, json, os, random, zipfile
@@ -165,37 +165,31 @@ def xmas_logo():
 
 
 def build():
+    """Baut auf dem ECHTEN Pack (XuroSMP-Pack.zip, HD-Texturen aus dem Artwork-Sheet) auf und ergänzt nur die Weihnachts-Extras.
+    So behalten Crystal-Tools, Rüstung, Icons und Logo ihr aktuelles Aussehen."""
+    base_zip = os.path.join(OUT, 'XuroSMP-Pack.zip')
     files = {}
-    files['pack.mcmeta'] = json.dumps({"pack": {"pack_format": 46, "description": "§cXuroSMP §fWeihnachten §7Resource-Pack"}}, ensure_ascii=False).encode('utf-8')
-    atlas = Img(8 * len(mp.ICONS), 8)
-    for i, ic in enumerate(mp.ICONS):
-        atlas.blit(ic, i * 8, 0)
-    logo = xmas_logo()
-    files['assets/smp/textures/font/icons.png'] = atlas.png()
-    files['assets/smp/textures/font/logo.png'] = logo.png()
-    font = {"providers": [
-        {"type": "bitmap", "file": "smp:font/icons.png", "ascent": 7, "height": 8, "chars": ["".join(mp.ICON_CHARS)]},
-        {"type": "bitmap", "file": "smp:font/logo.png", "ascent": 12, "height": logo.h, "chars": [chr(0xE100)]},
-    ]}
-    files['assets/minecraft/font/default.json'] = json.dumps(font).encode('ascii')
+    with zipfile.ZipFile(base_zip) as z:
+        for n in z.namelist():
+            if not n.endswith('/'):
+                files[n] = z.read(n)
+    mc = json.loads(files['pack.mcmeta'].decode('utf-8'))
+    mc['pack']['description'] = "§dXuroSMP §7Crystal-Pack §c+ Weihnachten\n§8xurosmp.daronlo.com"
+    files['pack.mcmeta'] = json.dumps(mc, ensure_ascii=False, indent=2).encode('utf-8')
 
-    tex = dict(mp.TEXTURES)
-    tex.update(XTEX)
-    for name, img in tex.items():
+    for name, img in XTEX.items():
         files[f'assets/smp/textures/item/{name}.png'] = img.png()
-        parent = 'minecraft:item/handheld' if name in mp.HANDHELD else 'minecraft:item/generated'
-        files[f'assets/smp/models/item/{name}.json'] = json.dumps({"parent": parent, "textures": {"layer0": f"smp:item/{name}"}}).encode()
-    models = {k: list(v) for k, v in mp.ITEM_MODELS.items()}
-    for k, v in XMODELS.items():
-        models.setdefault(k, []).extend(v)
-    for base, entries in models.items():
+        files[f'assets/smp/models/item/{name}.json'] = json.dumps({"parent": "minecraft:item/generated", "textures": {"layer0": f"smp:item/{name}"}}).encode()
+    for base, entries in XMODELS.items():
+        key = f'assets/minecraft/items/{base}.json'
+        if key in files:
+            raise SystemExit(f'{key} existiert schon im Basis-Pack: bitte Modelle zusammenführen')
         d = {"model": {"type": "minecraft:range_dispatch", "property": "minecraft:custom_model_data", "index": 0,
                        "fallback": {"type": "minecraft:model", "model": f"minecraft:item/{base}"},
                        "entries": [{"threshold": t, "model": {"type": "minecraft:model", "model": f"smp:item/{m}"}} for t, m in entries]}}
-        files[f'assets/minecraft/items/{base}.json'] = json.dumps(d).encode()
+        files[key] = json.dumps(d).encode()
     # Truhe: nur die einzelne Kiste wird zum Geschenk (Doppelkisten und Endertruhe bleiben normal)
     files['assets/minecraft/textures/entity/chest/normal.png'] = chest_texture().png()
-    files['pack.png'] = xmas_star_icon().png()
 
     zpath = os.path.join(OUT, 'XuroSMP-Weihnachten.zip')
     with zipfile.ZipFile(zpath, 'w', zipfile.ZIP_DEFLATED) as z:
@@ -214,7 +208,6 @@ def build():
             sheet.px[y][x] = (40, 22, 60, 255)
     for i, n in enumerate(['xmas_present', 'candy_cane', 'xmas_cookie', 'xmas_star']):
         sheet.blit(XTEX[n].scaled(6), 8 + i * 110, 8)
-    sheet.blit(logo.scaled(4), 8, 120)
     sheet.blit(chest_texture(), 480, 8)
     open(os.path.join(OUT, 'preview-weihnachten.png'), 'wb').write(sheet.png())
     return sha
