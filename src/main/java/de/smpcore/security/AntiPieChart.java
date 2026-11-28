@@ -29,7 +29,9 @@ public final class AntiPieChart implements Listener {
     }
 
     private void world(World w) {
-        if (on() && plugin.getConfig().getBoolean("anti-piechart.reduced-debug-info", true)) w.setGameRule(GameRule.REDUCED_DEBUG_INFO, true);
+        // Das Plugin verwaltet die Regel komplett: an = F3 ohne Koordinaten, aus = F3 normal (auch nach dem Ausschalten, sonst bliebe sie in der Welt stehen).
+        boolean hide = on() && plugin.getConfig().getBoolean("anti-piechart.reduced-debug-info", true);
+        w.setGameRule(GameRule.REDUCED_DEBUG_INFO, hide);
     }
 
     private void player(Player p) {
