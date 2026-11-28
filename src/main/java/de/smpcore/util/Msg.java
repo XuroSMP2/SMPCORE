@@ -43,8 +43,11 @@ public final class Msg {
         return format.replace("%tag%", t);
     }
 
-    public static Component c(String s) { return MM.deserialize(s); }
-    public static Component item(String s) { return MM.deserialize("<!italic>" + s); }
+    /** MiniMessage lehnt das Zeichen § (Legacy-Farbcodes) mit einer Exception ab, z. B. bei "siehe §2.1" in einem Bann-Grund. */
+    private static String safe(String s) { return s == null ? "" : s.replace("§", "Par. "); }
+
+    public static Component c(String s) { return MM.deserialize(safe(s)); }
+    public static Component item(String s) { return MM.deserialize("<!italic>" + safe(s)); }
     public static String esc(String s) { return MM.escapeTags(s); }
 
     public static void send(CommandSender to, String msg) { to.sendMessage(c(prefix() + msg)); }
